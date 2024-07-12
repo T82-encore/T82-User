@@ -2,7 +2,9 @@ package com.T82.user.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.cglib.core.Local;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.UUID;
 
@@ -12,9 +14,10 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "LOTTERY_HISTORIES")
+@Table(name = "Users")
 public class User {
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "USER_ID")
     private UUID userId;
 
@@ -28,7 +31,7 @@ public class User {
     private String name;
 
     @Column(name = "BIRTH_DATE", nullable = false)
-    private Date birthDate;
+    private LocalDate birthDate;
 
     @Column(name = "PHONE_NUMBER", nullable = false)
     private String phoneNumber;
@@ -42,8 +45,8 @@ public class User {
     @Column(name = "IS_DELETED", nullable = false)
     private Boolean isDeleted;
 
-    @Column(name = "CRREATED_DATE", nullable = false)
-    private Date crreatedDate;
+    @Column(name = "CREATED_DATE", nullable = false)
+    private LocalDate createdDate;
 
     @Column(name = "MODIFIED_DATE")
     private Date modifiedDate;
