@@ -3,6 +3,7 @@ package com.T82.user.service;
 import com.T82.user.domain.dto.request.UserSignUpRequest;
 import com.T82.user.domain.entity.User;
 import com.T82.user.domain.repository.UserRepository;
+import com.T82.user.exception.DuplicateEmailException;
 import com.T82.user.exception.DuplicateNumberException;
 import com.T82.user.exception.PasswordMissmatchException;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,10 @@ public class UserServiceImpl implements  UserService{
 
     @Override
     public void SignUpUser(UserSignUpRequest userSignUpRequest) {
+        User byEmail = userRepository.findByEmail(userSignUpRequest.email());
+        if(byEmail != null) {
+            throw new DuplicateEmailException("이미 존재하는 이메일입니다.");
+        }
         if (!Objects.equals(userSignUpRequest.password(), userSignUpRequest.passwordCheck()))
             throw new PasswordMissmatchException("비밀번호가 일치하지 않습니다.");
         User byPhone = userRepository.findByPhoneNumber(userSignUpRequest.phoneNumber());
