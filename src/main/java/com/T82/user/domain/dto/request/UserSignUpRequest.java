@@ -23,7 +23,7 @@ public record UserSignUpRequest(
         @PastOrPresent(message = "올바른 날짜 형식을 입력해주세요.")
         LocalDate birthDate,
         @NotBlank
-        @Pattern(regexp = "^\\d{2,3}-\\d{3,4}-\\d{4}$", message = "전화번호 형식이 맞지 않습니다. xxx-xxxx-xxxx")
+        @Pattern(regexp = "^\\d{3}-\\d{3,4}-\\d{4}$", message = "전화번호 형식이 맞지 않습니다. xxx-xxxx-xxxx")
         String phoneNumber,
         String address,
         String addressDetail
