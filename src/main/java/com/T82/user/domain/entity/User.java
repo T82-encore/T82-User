@@ -10,7 +10,6 @@ import java.util.UUID;
 
 @Entity
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -50,4 +49,8 @@ public class User {
 
     @Column(name = "MODIFIED_DATE")
     private Date modifiedDate;
+
+    public void withDrawUser() {
+        this.isDeleted = true;
+    }
 }
