@@ -1,7 +1,9 @@
 package com.T82.user.service;
 
+import com.T82.user.domain.dto.request.UserInfoRequest;
 import com.T82.user.domain.dto.request.UserSignUpRequest;
 import com.T82.user.domain.dto.request.UserWithDrawRequest;
+import com.T82.user.domain.dto.response.UserInfoResponse;
 import com.T82.user.domain.entity.User;
 import com.T82.user.domain.repository.UserRepository;
 import com.T82.user.exception.DuplicateEmailException;
@@ -33,14 +35,25 @@ public class UserServiceImpl implements  UserService{
         userRepository.save(userSignUpRequest.toEntity(userSignUpRequest));
     }
 
+    //    추후 토큰 형식에 맞춰 DTO 변경 필요
     @Override
     public void withDrawUser(UserWithDrawRequest userWithDrawRequest) {
-        User byUserId = userRepository.findByEmail(userWithDrawRequest.email());
-        if(byUserId == null) {
+        User byEmail = userRepository.findByEmail(userWithDrawRequest.email());
+        if(byEmail == null) {
             throw new NoUserException("존재하지 않는 유저입니다.");
         }
-        byUserId.withDrawUser();
-        userRepository.save(byUserId);
+        byEmail.withDrawUser();
+        userRepository.save(byEmail);
+    }
+
+    //    추후 토큰 형식에 맞춰 DTO 변경 필요
+    @Override
+    public UserInfoResponse getUserInfo(UserInfoRequest userInfoRequest) {
+        User byEmail = userRepository.findByEmail(userInfoRequest.email());
+        if(byEmail == null) {
+            throw new NoUserException("존재하지 않는 유저입니다.");
+        }
+        return UserInfoResponse.from(byEmail);
     }
 
 
