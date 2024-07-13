@@ -8,5 +8,7 @@ import java.util.UUID;
 public interface UserRepository extends JpaRepository<User, UUID>{
     User findByPhoneNumber(String phoneNumber);
     User findByEmail(String email);
+    //추후 토큰 관련된 값으로 변경 필요
+    User findByUserId(UUID userId);
 }
 

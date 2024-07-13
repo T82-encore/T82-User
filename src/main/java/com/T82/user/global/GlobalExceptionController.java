@@ -2,6 +2,7 @@ package com.T82.user.global;
 
 import com.T82.user.exception.DuplicateEmailException;
 import com.T82.user.exception.DuplicateNumberException;
+import com.T82.user.exception.NoUserException;
 import com.T82.user.exception.PasswordMissmatchException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -41,6 +42,13 @@ public class GlobalExceptionController {
 //    이메일 중복될때 예외처리
     @ExceptionHandler(DuplicateEmailException.class)
     public ResponseEntity<Map<String, String>> duplicateEmailException(DuplicateEmailException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("message", ex.getMessage());
+        return ResponseEntity.badRequest().body(errors);
+    }
+
+    @ExceptionHandler(NoUserException.class)
+    public ResponseEntity<Map<String, String>> noUserException(NoUserException ex) {
         Map<String, String> errors = new HashMap<>();
         errors.put("message", ex.getMessage());
         return ResponseEntity.badRequest().body(errors);
