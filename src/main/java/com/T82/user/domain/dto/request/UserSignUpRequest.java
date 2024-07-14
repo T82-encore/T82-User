@@ -29,10 +29,10 @@ public record UserSignUpRequest(
         String address,
         String addressDetail
 ) {
-    public User toEntity(UserSignUpRequest userSignUpRequest){
+    public User toEntity(String encodedPasword){
         return User.builder()
                 .email(email)
-                .password(password)
+                .password(encodedPasword)
                 .name(name)
                 .birthDate(birthDate)
                 .phoneNumber(phoneNumber)

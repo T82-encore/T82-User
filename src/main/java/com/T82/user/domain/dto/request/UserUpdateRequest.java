@@ -24,16 +24,5 @@ public record UserUpdateRequest(
         String addressDetail
 
 ) {
-//    public User toEntity(UserUpdateRequest userUpdateRequest){
-//        return User.builder()
-//                .name(  name)
-//                .birthDate(birthDate)
-//                .phoneNumber(phoneNumber)
-//                .address(address)
-//                .addressDetail(addressDetail)
-//                .isDeleted(false)
-//                .createdDate(LocalDate.now())
-//                .build();
-//    }
 
 }

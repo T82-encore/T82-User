@@ -12,6 +12,7 @@ import com.T82.user.exception.DuplicateNumberException;
 import com.T82.user.exception.NoUserException;
 import com.T82.user.exception.PasswordMissmatchException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -20,6 +21,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class UserServiceImpl implements  UserService{
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void signUpUser(UserSignUpRequest userSignUpRequest) {
@@ -33,7 +35,8 @@ public class UserServiceImpl implements  UserService{
         if(byPhone != null) {
             throw new DuplicateNumberException("이미 존재하는 휴대폰 번호입니다.");
         }
-        userRepository.save(userSignUpRequest.toEntity(userSignUpRequest));
+        String encodedPassword = passwordEncoder.encode(userSignUpRequest.password());
+        userRepository.save(userSignUpRequest.toEntity(encodedPassword));
     }
 
     //    추후 토큰 형식에 맞춰 DTO 변경 필요
