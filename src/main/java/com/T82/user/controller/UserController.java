@@ -2,6 +2,7 @@ package com.T82.user.controller;
 
 import com.T82.user.domain.dto.request.UserInfoRequest;
 import com.T82.user.domain.dto.request.UserSignUpRequest;
+import com.T82.user.domain.dto.request.UserUpdateRequest;
 import com.T82.user.domain.dto.request.UserWithDrawRequest;
 import com.T82.user.domain.dto.response.UserInfoResponse;
 import com.T82.user.service.UserService;
@@ -36,6 +37,15 @@ public class UserController {
     public void withDraw(@RequestBody UserWithDrawRequest userWithDrawRequest) {
         userService.withDrawUser(userWithDrawRequest);
     }
+
+//    유저 정보 수정
+//    추후 토큰 형식에 맞춰 DTO 변경 필요
+    @PostMapping("/user")
+    public void updateUser(@Validated @RequestBody UserUpdateRequest userUpdateRequest) {
+        userService.updateUser(userUpdateRequest);
+    }
+
+
 
 
 
