@@ -2,7 +2,6 @@ package com.T82.user.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -48,9 +47,17 @@ public class User {
     private LocalDate createdDate;
 
     @Column(name = "MODIFIED_DATE")
-    private Date modifiedDate;
+    private LocalDate modifiedDate;
 
     public void withDrawUser() {
         this.isDeleted = true;
     }
+
+    public void updateUser(String name, String password, String address, String addressDetail) {
+        this.name = name;
+        this.password = password;
+        this.address = address;
+        this.addressDetail = addressDetail;
+        this.modifiedDate = LocalDate.now();
+       }
 }

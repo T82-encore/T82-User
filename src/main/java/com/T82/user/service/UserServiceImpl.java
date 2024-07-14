@@ -2,6 +2,7 @@ package com.T82.user.service;
 
 import com.T82.user.domain.dto.request.UserInfoRequest;
 import com.T82.user.domain.dto.request.UserSignUpRequest;
+import com.T82.user.domain.dto.request.UserUpdateRequest;
 import com.T82.user.domain.dto.request.UserWithDrawRequest;
 import com.T82.user.domain.dto.response.UserInfoResponse;
 import com.T82.user.domain.entity.User;
@@ -55,6 +56,21 @@ public class UserServiceImpl implements  UserService{
         }
         return UserInfoResponse.from(byEmail);
     }
+
+    //    추후 토큰 형식에 맞춰 DTO 변경 필요
+    @Override
+    public void updateUser(UserUpdateRequest userUpdateRequest) {
+        User byName = userRepository.findByName(userUpdateRequest.name());
+        if(byName == null) {
+            throw new NoUserException("존재하지 않는 유저입니다.");
+        }
+        if (!Objects.equals(userUpdateRequest.password(), userUpdateRequest.passwordCheck()))
+            throw new PasswordMissmatchException("비밀번호가 일치하지 않습니다.");
+        byName.updateUser(userUpdateRequest.name(), userUpdateRequest.password(), userUpdateRequest.address(),userUpdateRequest.addressDetail());
+        System.out.println(byName.getModifiedDate());
+        userRepository.save(byName);
+    }
+
 
 
 }
