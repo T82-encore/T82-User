@@ -1,9 +1,6 @@
 package com.T82.user.service;
 
-import com.T82.user.domain.dto.request.UserInfoRequest;
-import com.T82.user.domain.dto.request.UserSignUpRequest;
-import com.T82.user.domain.dto.request.UserUpdateRequest;
-import com.T82.user.domain.dto.request.UserWithDrawRequest;
+import com.T82.user.domain.dto.request.*;
 import com.T82.user.domain.dto.response.UserInfoResponse;
 import com.T82.user.domain.entity.User;
 import com.T82.user.domain.repository.UserRepository;
@@ -46,6 +43,32 @@ class UserServiceImplTest {
             userService.signUpUser(userSignUpRequest);
             //then
             assertEquals(userRepository.findAll().size(), lengthBefore + 1);
+        }
+    }
+
+    @Nested
+    @Transactional
+    class 로그인{
+        @Test
+        void 성공(){
+            //given
+            UserSignUpRequest userSignUpRequest = new UserSignUpRequest(
+                    "test@naver.com",
+                    "1234",
+                    "1234",
+                    "테스트",
+                    LocalDate.now(),
+                    "010-1234-5678",
+                    "어딘가 123",
+                    "어딘가 123"
+            );
+            userService.signUpUser(userSignUpRequest);
+
+            UserLoginRequest userLoginRequest = new UserLoginRequest(
+                    "test@naver.com","1234"
+            );
+            //when & then
+            userService.loginUser(userLoginRequest);
         }
     }
 
