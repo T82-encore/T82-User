@@ -1,9 +1,6 @@
 package com.T82.user.controller;
 
-import com.T82.user.domain.dto.request.UserInfoRequest;
-import com.T82.user.domain.dto.request.UserSignUpRequest;
-import com.T82.user.domain.dto.request.UserUpdateRequest;
-import com.T82.user.domain.dto.request.UserWithDrawRequest;
+import com.T82.user.domain.dto.request.*;
 import com.T82.user.domain.dto.response.UserInfoResponse;
 import com.T82.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/user")
 
 public class UserController {
     private final UserService userService;
@@ -23,24 +20,30 @@ public class UserController {
         userService.signUpUser(userSignUpRequest);
     }
 
+//    유저 로그인
+    @PostMapping("/login")
+    public void login(@Validated @RequestBody UserLoginRequest userLoginRequest) {
+        userService.loginUser(userLoginRequest);
+    }
+
 //    유저 정보 가져오기
 //    추후 토큰 형식에 맞춰 DTO, REST API Request 형태 변경 필요
-    @GetMapping("/user/{email}")
-    public UserInfoResponse getUserInfo(@PathVariable(name = "email") UserInfoRequest userInfoRequest) {
+    @GetMapping("/{email}")
+    public UserInfoResponse getUserInfo(@Validated @PathVariable(name = "email") UserInfoRequest userInfoRequest) {
         return userService.getUserInfo(userInfoRequest);
     }
 
 
 //    유저 탈퇴
 //    추후 토큰 형식에 맞춰 DTO 변경 필요
-    @PostMapping("/user/withdraw")
-    public void withDraw(@RequestBody UserWithDrawRequest userWithDrawRequest) {
+    @DeleteMapping("/withdraw")
+    public void withDraw(@Validated @RequestBody UserWithDrawRequest userWithDrawRequest) {
         userService.withDrawUser(userWithDrawRequest);
     }
 
 //    유저 정보 수정
 //    추후 토큰 형식에 맞춰 DTO 변경 필요
-    @PostMapping("/user")
+    @PostMapping("/update")
     public void updateUser(@Validated @RequestBody UserUpdateRequest userUpdateRequest) {
         userService.updateUser(userUpdateRequest);
     }
