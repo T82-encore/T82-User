@@ -4,6 +4,7 @@ import com.T82.user.domain.dto.request.*;
 import com.T82.user.domain.dto.response.UserInfoResponse;
 import com.T82.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,8 +17,9 @@ public class UserController {
 
 //    유저 회원가입
     @PostMapping("/signup")
-    public void signUp(@Validated @RequestBody UserSignUpRequest userSignUpRequest) {
+    public ResponseEntity<String> signUp(@Validated @RequestBody UserSignUpRequest userSignUpRequest) {
         userService.signUpUser(userSignUpRequest);
+        return ResponseEntity.ok("회원가입 성공");
     }
 
 //    유저 로그인
