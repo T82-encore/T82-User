@@ -1,10 +1,12 @@
 package com.T82.user.service;
 
 import com.T82.user.domain.dto.request.*;
+import com.T82.user.domain.dto.response.TokenResponse;
 import com.T82.user.domain.dto.response.UserInfoResponse;
 import com.T82.user.domain.entity.User;
 import com.T82.user.domain.repository.UserRepository;
 import com.T82.user.exception.*;
+import com.T82.user.global.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,7 @@ import java.util.Objects;
 public class UserServiceImpl implements  UserService{
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     @Override
     public void signUpUser(UserSignUpRequest userSignUpRequest) {
@@ -34,15 +37,17 @@ public class UserServiceImpl implements  UserService{
     }
 
     @Override
-    public void loginUser(UserLoginRequest userLoginRequest) {
-        User byEmail = userRepository.findByEmail(userLoginRequest.email());
-        if(byEmail == null) {
+    public TokenResponse loginUser(UserLoginRequest userLoginRequest) {
+        User user = userRepository.findByEmail(userLoginRequest.email());
+        if(user == null) {
             throw new NoEmailException("해당 이메일이 존재하지 않습니다.");
         }
-        if(!passwordEncoder.matches(userLoginRequest.password(), byEmail.getPassword())){
+        if(!passwordEncoder.matches(userLoginRequest.password(), user.getPassword())){
             throw new PasswordMissmatchException("비밀번호가 일치하지 않습니다.");
         }
-        System.out.println("로그인 성공");
+        String token =jwtUtil.generateToken(user);
+        System.out.println(token);
+        return TokenResponse.from(token);
     }
 
     //    추후 토큰 형식에 맞춰 DTO 변경 필요

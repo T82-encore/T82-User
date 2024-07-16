@@ -1,9 +1,11 @@
 package com.T82.user.controller;
 
 import com.T82.user.domain.dto.request.*;
+import com.T82.user.domain.dto.response.TokenResponse;
 import com.T82.user.domain.dto.response.UserInfoResponse;
 import com.T82.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +26,8 @@ public class UserController {
 
 //    유저 로그인
     @PostMapping("/login")
-    public void login(@Validated @RequestBody UserLoginRequest userLoginRequest) {
-        userService.loginUser(userLoginRequest);
+    public ResponseEntity<TokenResponse> login(@Validated @RequestBody UserLoginRequest userLoginRequest) {
+        return  ResponseEntity.status(HttpStatus.OK).body(userService.loginUser(userLoginRequest));
     }
 
 //    유저 정보 가져오기
