@@ -14,4 +14,5 @@ server:
 
 jwt:
   secret: VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9XkHa
-  expiration: 6000000000000
+  expiration: 100000
+#  1초 = 1000

@@ -41,6 +41,18 @@ public class UserController {
 //        return userService.getUserInfo(userInfoRequest);
 //    }
 
+    //    유저 정보 수정
+//    추후 토큰 형식에 맞춰 DTO 변경 필요
+    @PutMapping
+//    public void updateUser(@Validated @RequestBody UserUpdateRequest userUpdateRequest) {
+//        userService.updateUser(userUpdateRequest);
+//    }
+    public void updateUser(@RequestHeader("Authorization") String token,
+            @Validated @RequestBody UserUpdateRequest userUpdateRequest) {
+        String bearerToken = token.substring(7);
+        userService.updateUser(bearerToken, userUpdateRequest);
+    }
+
 
 //    유저 탈퇴
 //    추후 토큰 형식에 맞춰 DTO 변경 필요
@@ -49,12 +61,7 @@ public class UserController {
         userService.withDrawUser(userWithDrawRequest);
     }
 
-//    유저 정보 수정
-//    추후 토큰 형식에 맞춰 DTO 변경 필요
-    @PostMapping
-    public void updateUser(@Validated @RequestBody UserUpdateRequest userUpdateRequest) {
-        userService.updateUser(userUpdateRequest);
-    }
+
 
 
 
