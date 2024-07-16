@@ -7,6 +7,7 @@ import com.T82.user.domain.entity.User;
 import com.T82.user.domain.repository.UserRepository;
 import com.T82.user.exception.*;
 import com.T82.user.global.utils.JwtUtil;
+import com.T82.user.global.utils.TokenInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -51,6 +52,17 @@ public class UserServiceImpl implements  UserService{
     }
 
     //    추후 토큰 형식에 맞춰 DTO 변경 필요
+//    @Override
+//    public UserInfoResponse getUserInfo(UserInfoRequest userInfoRequest) {
+//        jwtUtil.parseToken(tok)
+//        User byEmail = userRepository.findByEmail(userInfoRequest.email());
+//        if(byEmail == null) {
+//            throw new NoUserException("존재하지 않는 유저입니다.");
+//        }
+//        return UserInfoResponse.from(byEmail);
+//    }
+
+    //    추후 토큰 형식에 맞춰 DTO 변경 필요
     @Override
     public void withDrawUser(UserWithDrawRequest userWithDrawRequest) {
         User byEmail = userRepository.findByEmail(userWithDrawRequest.email());
@@ -61,10 +73,9 @@ public class UserServiceImpl implements  UserService{
         userRepository.save(byEmail);
     }
 
-    //    추후 토큰 형식에 맞춰 DTO 변경 필요
     @Override
-    public UserInfoResponse getUserInfo(UserInfoRequest userInfoRequest) {
-        User byEmail = userRepository.findByEmail(userInfoRequest.email());
+    public UserInfoResponse getUserInfo(String token) {
+        User byEmail = userRepository.findByEmail(jwtUtil.parseToken(token).email());
         if(byEmail == null) {
             throw new NoUserException("존재하지 않는 유저입니다.");
         }

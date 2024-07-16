@@ -23,12 +23,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (bearerToken != null && bearerToken.startsWith("Bearer ") && jwtUtil.validToken(bearerToken.substring(7))) {
             String token = bearerToken.substring(7);
             TokenInfo tokenInfo = jwtUtil.parseToken(token);
-            //??
+
+            //추출한 토큰을 정책에 주입(Context Holder)
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(tokenInfo,null, tokenInfo.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
 
         }
+        //다른 필터가 있으면 다음으로 넘기는 함수
         filterChain.doFilter(request, response);
     }
 }

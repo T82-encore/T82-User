@@ -1,13 +1,18 @@
 package com.T82.user.global.config;
 
+import com.T82.user.global.utils.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
 import java.util.List;
@@ -16,13 +21,13 @@ import java.util.List;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-//    //JwtUtil 주입
-//    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-//
-//    @Bean
-//    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-//        return configuration.getAuthenticationManager();
-//    }
+    //JwtUtil 주입
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
+    }
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -41,14 +46,15 @@ public class SecurityConfig {
             corsConfiguration.setAllowedOrigins(List.of("*"));
             return corsConfiguration;
         }));
-//        http.authorizeHttpRequests(auth ->
-//                auth.requestMatchers("/actuator/**","/users/login", "/users/qrcode/**", "/users/signup","/api/gcs/**","/users/search/**","/users/change/password")
-//                        .permitAll()
-//                        .anyRequest()
-//                        .authenticated()
-//        );
-//        http.addFilterAt(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-//        http.sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        http.authorizeHttpRequests(auth ->
+                auth.requestMatchers("/api/v1/user/signup","/api/v1/user/login")
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated()
+        );
+        http.addFilterAt(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        // 세션을 사용하지 않기 때문에 STATELESS로 설정
+        http.sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
     }
 }
