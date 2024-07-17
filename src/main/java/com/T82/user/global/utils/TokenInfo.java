@@ -10,15 +10,17 @@ import java.util.Collection;
 import java.util.List;
 
 public record TokenInfo (
-        String id, String email, LocalDate birthDate, String name, String phoneNumber) implements UserDetails {
+        String id, String email) implements UserDetails {
 
     public static TokenInfo fromClaims(Claims claims) {
         String id = claims.get("id", String.class);
         String email = claims.get("email", String.class);
-        LocalDate birthDate = LocalDate.parse(claims.get("birthDate", String.class));
-        String name = claims.get("name", String.class);
-        String phoneNumber = claims.get("phoneNumber", String.class);
-        return new TokenInfo(id, email, birthDate, name, phoneNumber);
+//        LocalDate birthDate = LocalDate.parse(claims.get("birthDate", String.class));
+//        String name = claims.get("name", String.class);
+//        String phoneNumber = claims.get("phoneNumber", String.class);
+        return new TokenInfo(id, email);
+
+
     }
 
     @Override

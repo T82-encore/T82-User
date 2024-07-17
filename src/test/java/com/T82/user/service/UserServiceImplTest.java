@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -82,9 +81,9 @@ class UserServiceImplTest {
                 LocalDate.now(),"010-1234-5678","테스트","테스트",
                     false,LocalDate.now(),null);
             userRepository.save(user);
-            UserWithDrawRequest userWithDrawRequest = new UserWithDrawRequest("test@naver.com");
+//            UserWithDrawRequest userWithDrawRequest = new UserWithDrawRequest("test@naver.com");
             //when
-            userService.withDrawUser(userWithDrawRequest);
+            userService.deleteUser(userWithDrawRequest);
             //then
             User byEmail = userRepository.findByEmail("test@naver.com");
             assertEquals(true,byEmail.getIsDeleted());
@@ -101,7 +100,7 @@ class UserServiceImplTest {
                     LocalDate.now(),"010-1234-5678","주소","상세주소",
                     false,LocalDate.now(),null);
             userRepository.save(user);
-            UserInfoRequest userInfoRequest = new UserInfoRequest("test@naver.com");
+//            UserInfoRequest userInfoRequest = new UserInfoRequest("test@naver.com");
             //when
             UserInfoResponse userInfo = userService.getUserInfo(userInfoRequest);
             User byEmail = userRepository.findByEmail("test@naver.com");

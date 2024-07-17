@@ -31,34 +31,27 @@ public class UserController {
     }
 
 //    유저 정보 가져오기
-//    추후 토큰 형식에 맞춰 DTO, REST API Request 형태 변경 필요
-    @GetMapping
+    @GetMapping("/me")
     public UserInfoResponse getUserInfo (@RequestHeader("Authorization") String token) {
         String bearerToken = token.substring(7);
         return userService.getUserInfo(bearerToken);
     }
-    //    public UserInfoResponse getUserInfo(@Validated @PathVariable(name = "email") UserInfoRequest userInfoRequest) {
-//        return userService.getUserInfo(userInfoRequest);
-//    }
 
-    //    유저 정보 수정
-//    추후 토큰 형식에 맞춰 DTO 변경 필요
-    @PutMapping
-//    public void updateUser(@Validated @RequestBody UserUpdateRequest userUpdateRequest) {
-//        userService.updateUser(userUpdateRequest);
-//    }
-    public void updateUser(@RequestHeader("Authorization") String token,
+//    유저 정보 수정
+    @PutMapping("/me")
+    public ResponseEntity<String> updateUser(@RequestHeader("Authorization") String token,
             @Validated @RequestBody UserUpdateRequest userUpdateRequest) {
         String bearerToken = token.substring(7);
         userService.updateUser(bearerToken, userUpdateRequest);
+        return ResponseEntity.ok("정보 수정 성공");
     }
 
-
 //    유저 탈퇴
-//    추후 토큰 형식에 맞춰 DTO 변경 필요
-    @DeleteMapping("/withdraw")
-    public void withDraw(@Validated @RequestBody UserWithDrawRequest userWithDrawRequest) {
-        userService.withDrawUser(userWithDrawRequest);
+    @DeleteMapping("/me")
+    public ResponseEntity<String> deleteUser(@RequestHeader("Authorization") String token) {
+        String bearerToken = token.substring(7);
+        userService.deleteUser(bearerToken);
+        return ResponseEntity.ok("정보 삭제 성공");
     }
 
 

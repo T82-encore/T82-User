@@ -28,9 +28,9 @@ public class JwtUtil {
         return Jwts.builder()
                 .claim("id", user.getUserId())
                 .claim("email",user.getEmail())
-                .claim("birthDate",user.getBirthDate().toString())
-                .claim("name",user.getName())
-                .claim("phoneNumber",user.getPhoneNumber())
+//                .claim("birthDate",user.getBirthDate().toString())
+//                .claim("name",user.getName())
+//                .claim("phoneNumber",user.getPhoneNumber())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(this.secret)
                 .compact();

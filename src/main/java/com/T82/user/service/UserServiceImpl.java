@@ -51,17 +51,6 @@ public class UserServiceImpl implements  UserService{
         return TokenResponse.from(token);
     }
 
-    //    추후 토큰 형식에 맞춰 DTO 변경 필요
-//    @Override
-//    public UserInfoResponse getUserInfo(UserInfoRequest userInfoRequest) {
-//        jwtUtil.parseToken(tok)
-//        User byEmail = userRepository.findByEmail(userInfoRequest.email());
-//        if(byEmail == null) {
-//            throw new NoUserException("존재하지 않는 유저입니다.");
-//        }
-//        return UserInfoResponse.from(byEmail);
-//    }
-
     @Override
     public UserInfoResponse getUserInfo(String token) {
         User byEmail = userRepository.findByEmail(jwtUtil.parseToken(token).email());
@@ -80,31 +69,16 @@ public class UserServiceImpl implements  UserService{
         if(!Objects.equals(userUpdateRequest.password(), userUpdateRequest.passwordCheck())) {
             throw new PasswordMissmatchException("비밀번호가 일치하지 않습니다.");
         }
-        byEmail.updateUser(userUpdateRequest.name(), userUpdateRequest.password(), userUpdateRequest.address(),userUpdateRequest.addressDetail());
+        String encodedPassword = passwordEncoder.encode(userUpdateRequest.password());
+        byEmail.updateUser(userUpdateRequest.name(),encodedPassword, userUpdateRequest.address(),userUpdateRequest.addressDetail());
         userRepository.save(byEmail);
     }
 
-    //    추후 토큰 형식에 맞춰 DTO 변경 필요
-//    @Override
-//    public void updateUser(UserUpdateRequest userUpdateRequest) {
-//        User byName = userRepository.findByName(userUpdateRequest.name());
-//        if(byName == null) {
-//            throw new NoUserException("존재하지 않는 유저입니다.");
-//        }
-//        if (!Objects.equals(userUpdateRequest.password(), userUpdateRequest.passwordCheck()))
-//            throw new PasswordMissmatchException("비밀번호가 일치하지 않습니다.");
-//        byName.updateUser(userUpdateRequest.name(), userUpdateRequest.password(), userUpdateRequest.address(),userUpdateRequest.addressDetail());
-//        System.out.println(byName.getModifiedDate());
-//        userRepository.save(byName);
-//    }
-
-
-    //    추후 토큰 형식에 맞춰 DTO 변경 필요
     @Override
-    public void withDrawUser(UserWithDrawRequest userWithDrawRequest) {
-        User byEmail = userRepository.findByEmail(userWithDrawRequest.email());
+    public void deleteUser(String token) {
+        User byEmail = userRepository.findByEmail(jwtUtil.parseToken(token).email());
         if(byEmail == null) {
-            throw new NoUserException("존재하지 않는 유저입니다.");
+            throw new NoUserException("존재하지 않는 이메일입니다.");
         }
         byEmail.withDrawUser();
         userRepository.save(byEmail);
