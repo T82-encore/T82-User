@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -52,8 +53,15 @@ public class UserServiceImpl implements  UserService{
     }
 
     @Override
-    public UserInfoResponse getUserInfo(String token) {
-        User byEmail = userRepository.findByEmail(jwtUtil.parseToken(token).email());
+    public TokenResponse refreshToken(TokenInfo tokenInfo) {
+        User user = userRepository.findById(UUID.fromString(tokenInfo.id())).orElseThrow();
+        String token = jwtUtil.generateToken(user);
+        return TokenResponse.from(token);
+    }
+
+    @Override
+    public UserInfoResponse getUserInfo(TokenInfo token) {
+        User byEmail = userRepository.findByEmail(token.email());
         if(byEmail == null) {
             throw new NoUserException("존재하지 않는 유저입니다.");
         }
@@ -61,8 +69,8 @@ public class UserServiceImpl implements  UserService{
     }
 
     @Override
-    public void updateUser(String token, UserUpdateRequest userUpdateRequest) {
-        User byEmail = userRepository.findByEmail(jwtUtil.parseToken(token).email());
+    public void updateUser(TokenInfo tokenInfo, UserUpdateRequest userUpdateRequest) {
+        User byEmail = userRepository.findByEmail(tokenInfo.email());
         if(byEmail == null) {
             throw new NoEmailException("존재하지 않는 이메일입니다.");
         }
@@ -75,8 +83,8 @@ public class UserServiceImpl implements  UserService{
     }
 
     @Override
-    public void deleteUser(String token) {
-        User byEmail = userRepository.findByEmail(jwtUtil.parseToken(token).email());
+    public void deleteUser(TokenInfo tokenInfo) {
+        User byEmail = userRepository.findByEmail(tokenInfo.email());
         if(byEmail == null) {
             throw new NoUserException("존재하지 않는 유저입니다.");
         }
