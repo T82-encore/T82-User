@@ -1,9 +1,12 @@
 package com.T82.user.controller;
 
 import com.T82.user.domain.dto.request.*;
+import com.T82.user.domain.dto.response.TokenResponse;
 import com.T82.user.domain.dto.response.UserInfoResponse;
 import com.T82.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,37 +19,42 @@ public class UserController {
 
 //    유저 회원가입
     @PostMapping("/signup")
-    public void signUp(@Validated @RequestBody UserSignUpRequest userSignUpRequest) {
+    public ResponseEntity<String> signUp(@Validated @RequestBody UserSignUpRequest userSignUpRequest) {
         userService.signUpUser(userSignUpRequest);
+        return ResponseEntity.ok("회원가입 성공");
     }
 
 //    유저 로그인
     @PostMapping("/login")
-    public void login(@Validated @RequestBody UserLoginRequest userLoginRequest) {
-        userService.loginUser(userLoginRequest);
+    public ResponseEntity<TokenResponse> login(@Validated @RequestBody UserLoginRequest userLoginRequest) {
+        return  ResponseEntity.status(HttpStatus.OK).body(userService.loginUser(userLoginRequest));
     }
 
 //    유저 정보 가져오기
-//    추후 토큰 형식에 맞춰 DTO, REST API Request 형태 변경 필요
-    @GetMapping("/{email}")
-    public UserInfoResponse getUserInfo(@Validated @PathVariable(name = "email") UserInfoRequest userInfoRequest) {
-        return userService.getUserInfo(userInfoRequest);
-    }
-
-
-//    유저 탈퇴
-//    추후 토큰 형식에 맞춰 DTO 변경 필요
-    @DeleteMapping("/withdraw")
-    public void withDraw(@Validated @RequestBody UserWithDrawRequest userWithDrawRequest) {
-        userService.withDrawUser(userWithDrawRequest);
+    @GetMapping("/me")
+    public UserInfoResponse getUserInfo (@RequestHeader("Authorization") String token) {
+        String bearerToken = token.substring(7);
+        return userService.getUserInfo(bearerToken);
     }
 
 //    유저 정보 수정
-//    추후 토큰 형식에 맞춰 DTO 변경 필요
-    @PostMapping("/update")
-    public void updateUser(@Validated @RequestBody UserUpdateRequest userUpdateRequest) {
-        userService.updateUser(userUpdateRequest);
+    @PutMapping("/me")
+    public ResponseEntity<String> updateUser(@RequestHeader("Authorization") String token,
+            @Validated @RequestBody UserUpdateRequest userUpdateRequest) {
+        String bearerToken = token.substring(7);
+        userService.updateUser(bearerToken, userUpdateRequest);
+        return ResponseEntity.ok("정보 수정 성공");
     }
+
+//    유저 탈퇴
+    @DeleteMapping("/me")
+    public ResponseEntity<String> deleteUser(@RequestHeader("Authorization") String token) {
+        String bearerToken = token.substring(7);
+        userService.deleteUser(bearerToken);
+        return ResponseEntity.ok("정보 삭제 성공");
+    }
+
+
 
 
 

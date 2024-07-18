@@ -6,7 +6,7 @@ public record UserInfoResponse(
         String name,
         String address,
         String addressDetail,
-        String PhoneNumber
+        String phoneNumber
 ) {
     public static UserInfoResponse from(User user){
         return new UserInfoResponse(user.getName(), user.getAddress(), user.getAddressDetail(), user.getPhoneNumber());
