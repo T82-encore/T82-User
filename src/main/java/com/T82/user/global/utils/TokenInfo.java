@@ -8,12 +8,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 public record TokenInfo (
-        String id, String email) implements UserDetails {
+        UUID id, String email) implements UserDetails {
 
     public static TokenInfo fromClaims(Claims claims) {
-        String id = claims.get("id", String.class);
+//        String id = claims.get("id", String.class);
+        UUID id = UUID.fromString(claims.get("id", String.class));
         String email = claims.get("email", String.class);
 //        LocalDate birthDate = LocalDate.parse(claims.get("birthDate", String.class));
 //        String name = claims.get("name", String.class);

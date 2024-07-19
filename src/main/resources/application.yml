@@ -14,7 +14,7 @@ server:
 
 jwt:
   secret: VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9XkHa
-  expiration: 10000
+  expiration: 1000000
 
 logging:
   level:

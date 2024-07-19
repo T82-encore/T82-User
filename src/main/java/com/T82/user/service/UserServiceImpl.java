@@ -54,7 +54,7 @@ public class UserServiceImpl implements  UserService{
 
     @Override
     public TokenResponse refreshToken(TokenInfo tokenInfo) {
-        User user = userRepository.findById(UUID.fromString(tokenInfo.id())).orElseThrow();
+        User user = userRepository.findById(tokenInfo.id()).orElseThrow();
         String token = jwtUtil.generateToken(user);
         return TokenResponse.from(token);
     }
