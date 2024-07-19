@@ -2,6 +2,8 @@ package com.T82.user.global;
 
 import com.T82.user.domain.dto.response.ErrorResponse;
 import com.T82.user.exception.*;
+import io.jsonwebtoken.JwtException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -57,6 +59,12 @@ public class GlobalExceptionController {
     public ResponseEntity<ErrorResponse> noEmailException(NoEmailException ex) {
         ErrorResponse error = new ErrorResponse("email", ex.getMessage());
         return ResponseEntity.badRequest().body(error);
+    }
+
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<ErrorResponse> jwtExpiredException(JwtException ex) {
+        ErrorResponse error = new ErrorResponse("jwt", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
 
 }

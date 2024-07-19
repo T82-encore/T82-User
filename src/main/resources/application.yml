@@ -14,5 +14,9 @@ server:
 
 jwt:
   secret: VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9XkHa
-  expiration: 1000000000000
+  expiration: 10000
+
+logging:
+  level:
+    org.springframework.security: trace
 #  1초 = 1000
