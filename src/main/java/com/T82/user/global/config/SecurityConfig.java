@@ -1,6 +1,7 @@
 package com.T82.user.global.config;
 
 import com.T82.user.global.utils.JwtAuthenticationFilter;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -52,7 +53,9 @@ public class SecurityConfig {
                         .anyRequest()
                         .authenticated()
         );
-        http.addFilterAt(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        http.exceptionHandling(AbstractHttpConfigurer::disable);
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
         // 세션을 사용하지 않기 때문에 STATELESS로 설정
         http.sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
