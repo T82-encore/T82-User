@@ -39,15 +39,12 @@ public class JwtUtil {
 
     //JWT 토큰 정보 보기 작업
     public TokenInfo parseToken(String token) {
-        try{Claims payload = (Claims) Jwts.parser()
+    Claims payload = (Claims) Jwts.parser()
                 .verifyWith(secret)
                 .build()
                 .parse(token)
                 .getPayload();
-        return TokenInfo.fromClaims(payload);}
-        catch(JwtException e){
-            throw new IllegalArgumentException("유효하지 않은 토큰입니다.",e);
-        }
+        return TokenInfo.fromClaims(payload);
     }
 
     //JWT 토큰 만료됐는지 검증하는 작업
