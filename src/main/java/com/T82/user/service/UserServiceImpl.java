@@ -8,6 +8,7 @@ import com.T82.user.domain.repository.UserRepository;
 import com.T82.user.exception.*;
 import com.T82.user.global.utils.JwtUtil;
 import com.T82.user.global.utils.TokenInfo;
+import com.T82.user.kafka.dto.request.KafkaUserDeleteRequest;
 import com.T82.user.kafka.dto.request.KafkaUserSignUpRequest;
 import com.T82.user.kafka.producer.KafkaProducer;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +42,7 @@ public class UserServiceImpl implements  UserService{
         User user = userRepository.save(userSignUpRequest.toEntity(encodedPassword));
         KafkaUserSignUpRequest kafkaUserSignUpRequest =
                 new KafkaUserSignUpRequest(user.getUserId(), user.getEmail(), user.getIsDeleted());
+        System.out.println(kafkaUserSignUpRequest.userId());
         kafkaProducer.sendSignUp(kafkaUserSignUpRequest, "signup-topic");
     }
 
@@ -48,7 +50,7 @@ public class UserServiceImpl implements  UserService{
     public TokenResponse loginUser(UserLoginRequest userLoginRequest) {
         User user = userRepository.findByEmail(userLoginRequest.email());
         if(user.getIsDeleted()){
-            throw new UserDeleteException("해당 회원은 탈퇴된 회원입니다.");
+            throw new UserDeleteException("해당 회원은 탈퇴한 회원입니다.");
         }
         if(!passwordEncoder.matches(userLoginRequest.password(), user.getPassword())){
             throw new PasswordMissmatchException("비밀번호가 일치하지 않습니다.");
@@ -95,7 +97,9 @@ public class UserServiceImpl implements  UserService{
             throw new NoUserException("존재하지 않는 유저입니다.");
         }
         byEmail.withDrawUser();
-        userRepository.save(byEmail);
+        User user = userRepository.save(byEmail);
+        KafkaUserDeleteRequest kafkaUserDeleteRequest = new KafkaUserDeleteRequest(user.getUserId());
+        kafkaProducer.sendDelete(kafkaUserDeleteRequest, "delete-topic");
     }
 
 
