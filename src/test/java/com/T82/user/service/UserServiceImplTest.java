@@ -16,6 +16,8 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.security.SignatureException;
 import java.time.LocalDate;
 import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
@@ -237,37 +239,11 @@ class UserServiceImplTest {
                     "test@naver.com","1234"
             );
             TokenResponse tokenResponse = userService.loginUser(userLoginRequest);
+            TokenInfo tokenInfo = jwtUtil.parseToken(tokenResponse.token());
 
             //when
-            UserInfoResponse userInfo = userService.getUserInfo(tokenResponse.token());
+            UserInfoResponse userInfo = userService.getUserInfo(tokenInfo);
 
-            //then
-            assertThat(userSignUpRequest.name()).isEqualTo(userInfo.name());
-            assertThat(userSignUpRequest.address()).isEqualTo(userInfo.address());
-            assertThat(userSignUpRequest.addressDetail()).isEqualTo(userInfo.addressDetail());
-            assertThat(userSignUpRequest.phoneNumber()).isEqualTo(userInfo.phoneNumber());
-        }
-
-        void t(){
-            //given
-            UserSignUpRequest userSignUpRequest = new UserSignUpRequest(
-                    "test@naver.com",
-                    "1234",
-                    "1234",
-                    "테스트",
-                    LocalDate.now(),
-                    "010-1234-5678",
-                    "어딘가-123",
-                    "어딘가-123"
-            );
-            userService.signUpUser(userSignUpRequest);
-            UserLoginRequest userLoginRequest = new UserLoginRequest(
-                    "test@naver.com","1234"
-            );
-            TokenResponse tokenResponse = userService.loginUser(userLoginRequest);
-
-            //when
-            UserInfoResponse userInfo = userService.getUserInfo(tokenResponse.token());
             //then
             assertThat(userSignUpRequest.name()).isEqualTo(userInfo.name());
             assertThat(userSignUpRequest.address()).isEqualTo(userInfo.address());
@@ -276,7 +252,7 @@ class UserServiceImplTest {
         }
 
         @Test
-        void 실패_유효하지_않은_토큰(){
+        void 실패_존재하지_않는_사용자() {
             //given
             UserSignUpRequest userSignUpRequest = new UserSignUpRequest(
                     "test@naver.com",
@@ -290,18 +266,24 @@ class UserServiceImplTest {
             );
             userService.signUpUser(userSignUpRequest);
             UserLoginRequest userLoginRequest = new UserLoginRequest(
-                    "test@naver.com","1234"
+                    "test@naver.com", "1234"
             );
-            userService.loginUser(userLoginRequest);
+            TokenResponse tokenResponse = userService.loginUser(userLoginRequest);
+
+            // 존재하지 않는 이메일을 사용하여 TokenInfo 객체 생성
+            TokenInfo nonExistentUserTokenInfo = new TokenInfo(
+                    UUID.randomUUID(), "nonexistent@naver.com"
+            );
 
             //when
-            IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-                userService.getUserInfo("eyJhbGciOiJIUzM4NCJ9." +
-                        "eyJpZCI6IjI4YjEZXhhbXBb20ifQ." +
-                        "ax0Zenmzl_yNX8Nn8lqyyN");
+            NoUserException exception = assertThrows(NoUserException.class, () -> {
+                userService.getUserInfo(nonExistentUserTokenInfo);
             });
-            assertEquals("유효하지 않은 토큰입니다.", exception.getMessage());
+
+            //then
+            assertEquals("존재하지 않는 유저입니다.", exception.getMessage());
         }
+
     }
 
     @Nested
@@ -325,6 +307,7 @@ class UserServiceImplTest {
                     "test@naver.com","1234"
             );
             TokenResponse tokenResponse = userService.loginUser(userLoginRequest);
+            TokenInfo tokenInfo = jwtUtil.parseToken(tokenResponse.token());
 
             UserUpdateRequest userUpdateRequest = new UserUpdateRequest(
                     "홍길동",
@@ -334,7 +317,7 @@ class UserServiceImplTest {
                     "바뀐상세주소-123"
             );
             //when
-            userService.updateUser(tokenResponse.token(), userUpdateRequest);
+            userService.updateUser(tokenInfo, userUpdateRequest);
             //then
             User byEmail = userRepository.findByEmail(jwtUtil.parseToken(tokenResponse.token()).email());
             assertThat(byEmail.getName()).isEqualTo("홍길동");
@@ -364,6 +347,7 @@ class UserServiceImplTest {
                     "test@naver.com", "1234"
             );
             TokenResponse tokenResponse = userService.loginUser(userLoginRequest);
+            TokenInfo tokenInfo = jwtUtil.parseToken(tokenResponse.token());
             System.out.println(tokenResponse.token());
             UserUpdateRequest userUpdateRequest = new UserUpdateRequest(
                     "홍길동",
@@ -375,44 +359,9 @@ class UserServiceImplTest {
 
             // when & then
             PasswordMissmatchException exception = assertThrows(PasswordMissmatchException.class, () -> {
-                userService.updateUser(tokenResponse.token(), userUpdateRequest);
+                userService.updateUser(tokenInfo, userUpdateRequest);
             });
             assertThat("비밀번호가 일치하지 않습니다.").isEqualTo(exception.getMessage());
-        }
-        @Test
-        void 실패_유효하지_않은_토큰(){
-            //given
-            UserSignUpRequest userSignUpRequest = new UserSignUpRequest(
-                    "test@naver.com",
-                    "1234",
-                    "1234",
-                    "테스트",
-                    LocalDate.now(),
-                    "010-1234-5678",
-                    "어딘가-123",
-                    "어딘가-123"
-            );
-            userService.signUpUser(userSignUpRequest);
-            UserLoginRequest userLoginRequest = new UserLoginRequest(
-                    "test@naver.com","1234"
-            );
-            userService.loginUser(userLoginRequest);
-
-            UserUpdateRequest userUpdateRequest = new UserUpdateRequest(
-                    "홍길동",
-                    "1111",
-                    "111",
-                    "바뀐주소",
-                    "바뀐 상세주소"
-            );
-
-            //when
-            IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-                userService.updateUser("eyJhbGciOiJIUzM4NCJ9." +
-                        "eyJpZCI6IjI4YjEZXhhbXBb20ifQ." +
-                        "ax0Zenmzl_yNX8Nn8lqyyN",userUpdateRequest);
-            });
-            assertEquals("유효하지 않은 토큰입니다.", exception.getMessage());
         }
     }
 
@@ -437,8 +386,10 @@ class UserServiceImplTest {
                     "test@naver.com","1234"
             );
             TokenResponse tokenResponse = userService.loginUser(userLoginRequest);
+            TokenInfo tokenInfo = jwtUtil.parseToken(tokenResponse.token());
+
             //when
-            userService.deleteUser(tokenResponse.token());
+            userService.deleteUser(tokenInfo);
             User byEmail = userRepository.findByEmail(jwtUtil.parseToken(tokenResponse.token()).email());
 
             //then
@@ -446,7 +397,7 @@ class UserServiceImplTest {
         }
 
         @Test
-        void 실패_유효하지_않은_토큰(){
+        void 실패_존재하지_않는_사용자(){
             //given
             UserSignUpRequest userSignUpRequest = new UserSignUpRequest(
                     "test@naver.com",
@@ -460,17 +411,22 @@ class UserServiceImplTest {
             );
             userService.signUpUser(userSignUpRequest);
             UserLoginRequest userLoginRequest = new UserLoginRequest(
-                    "test@naver.com","1234"
+                    "test@naver.com", "1234"
             );
-            userService.loginUser(userLoginRequest);
+            TokenResponse tokenResponse = userService.loginUser(userLoginRequest);
+            TokenInfo tokenInfo = jwtUtil.parseToken(tokenResponse.token());
+
+            TokenInfo nonExistentUserTokenInfo = new TokenInfo(
+                    UUID.randomUUID(), "nonexistent@naver.com"
+            );
 
             //when
-            IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-                userService.deleteUser("eyJhbGciOiJIUzM4NCJ9." +
-                        "eyJpZCI6IjI4YjEZXhhbXBb20ifQ." +
-                        "ax0Zenmzl_yNX8Nn8lqyyN");
+            NoUserException exception = assertThrows(NoUserException.class, () -> {
+                userService.deleteUser(nonExistentUserTokenInfo);
             });
-            assertEquals("유효하지 않은 토큰입니다.", exception.getMessage());
+
+            //then
+            assertEquals("존재하지 않는 유저입니다.", exception.getMessage());
         }
     }
 }

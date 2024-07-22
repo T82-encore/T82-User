@@ -41,8 +41,8 @@ public class UserServiceImpl implements  UserService{
     @Override
     public TokenResponse loginUser(UserLoginRequest userLoginRequest) {
         User user = userRepository.findByEmail(userLoginRequest.email());
-        if(user == null) {
-            throw new NoEmailException("해당 이메일이 존재하지 않습니다.");
+        if(user.getIsDeleted()){
+            throw new UserDeleteException("해당 회원은 탈퇴된 회원입니다.");
         }
         if(!passwordEncoder.matches(userLoginRequest.password(), user.getPassword())){
             throw new PasswordMissmatchException("비밀번호가 일치하지 않습니다.");
