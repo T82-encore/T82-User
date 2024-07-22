@@ -16,7 +16,12 @@ jwt:
   secret: VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9XkHa
   expiration: 1000000
 
-logging:
-  level:
-    org.springframework.security: trace
+  kafka:
+    bootstrap-servers: 34.66.127.160
+    producer:
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+#logging:
+#  level:
+#    org.springframework.security: trace
 #  1초 = 1000

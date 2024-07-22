@@ -8,6 +8,8 @@ import com.T82.user.domain.repository.UserRepository;
 import com.T82.user.exception.*;
 import com.T82.user.global.utils.JwtUtil;
 import com.T82.user.global.utils.TokenInfo;
+import com.T82.user.kafka.dto.request.KafkaUserSignUpRequest;
+import com.T82.user.kafka.producer.KafkaProducer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ public class UserServiceImpl implements  UserService{
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final KafkaProducer kafkaProducer;
 
     @Override
     public void signUpUser(UserSignUpRequest userSignUpRequest) {
@@ -35,7 +38,10 @@ public class UserServiceImpl implements  UserService{
             throw new DuplicateNumberException("이미 존재하는 휴대폰 번호입니다.");
         }
         String encodedPassword = passwordEncoder.encode(userSignUpRequest.password());
-        userRepository.save(userSignUpRequest.toEntity(encodedPassword));
+        User user = userRepository.save(userSignUpRequest.toEntity(encodedPassword));
+        KafkaUserSignUpRequest kafkaUserSignUpRequest =
+                new KafkaUserSignUpRequest(user.getUserId(), user.getEmail(), user.getIsDeleted());
+        kafkaProducer.sendSignUp(kafkaUserSignUpRequest, "signUp");
     }
 
     @Override
