@@ -53,7 +53,13 @@ public class SecurityConfig {
                         .anyRequest()
                         .authenticated()
         );
-        http.exceptionHandling(AbstractHttpConfigurer::disable);
+//        http.exceptionHandling(AbstractHttpConfigurer::disable);
+        http.exceptionHandling(exception -> exception
+                .authenticationEntryPoint((request, response, authException) ->
+                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"))
+                .accessDeniedHandler((request, response, accessDeniedException) ->
+                        response.sendError(HttpServletResponse.SC_FORBIDDEN, "Forbidden"))
+        );
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         // 세션을 사용하지 않기 때문에 STATELESS로 설정

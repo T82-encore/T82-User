@@ -5,6 +5,7 @@ import com.T82.user.exception.*;
 import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -58,6 +59,13 @@ public class GlobalExceptionController {
     @ExceptionHandler(NoEmailException.class)
     public ResponseEntity<ErrorResponse> noEmailException(NoEmailException ex) {
         ErrorResponse error = new ErrorResponse("email", ex.getMessage());
+        return ResponseEntity.badRequest().body(error);
+    }
+
+    //    회원 탈퇴된 상태일때 예외처리
+    @ExceptionHandler(UserDeleteException.class)
+    public ResponseEntity<ErrorResponse> userDeleteException(UserDeleteException ex) {
+        ErrorResponse error = new ErrorResponse("user", ex.getMessage());
         return ResponseEntity.badRequest().body(error);
     }
 

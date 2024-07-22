@@ -20,7 +20,7 @@ public record UserSignUpRequest(
         @Size(min = 2, message = "최소 2자 이상 입력해주세요.")
         @Pattern(regexp = "^([A-Za-z가-힣]{2,})+$", message = "올바른 이름 형식을 입력해주세요.")
         String name,
-        @NotNull(message = "공백일 수 없습니다")
+        @NotNull(message = "공백일 수 없습니다.")
         @PastOrPresent(message = "올바른 날짜 형식을 입력해주세요.")
         LocalDate birthDate,
         @NotBlank
