@@ -14,7 +14,6 @@ public record UserInfoResponse(
 
 ) {
     public static UserInfoResponse from(User user){
-//        return new UserInfoResponse(user.getName(), user.getAddress(), user.getAddressDetail(), user.getPhoneNumber());
         return new UserInfoResponse(user.getName(), user.getEmail(),user.getBirthDate().toString(),
                 user.getAddress(), user.getAddressDetail(), user.getPhoneNumber());
     }

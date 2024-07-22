@@ -9,17 +9,16 @@ spring:
     hibernate:
       ddl-auto: create
     show-sql: true
+  kafka:
+    producer:
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    bootstrap-servers: 34.66.127.160:9094
 server:
   port: 8000
 
 jwt:
   secret: VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9XkHa
   expiration: 1000000
-
-  kafka:
-    bootstrap-servers: 34.66.127.160
-    producer:
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
 #logging:
 #  level:

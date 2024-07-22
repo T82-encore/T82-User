@@ -41,7 +41,7 @@ public class UserServiceImpl implements  UserService{
         User user = userRepository.save(userSignUpRequest.toEntity(encodedPassword));
         KafkaUserSignUpRequest kafkaUserSignUpRequest =
                 new KafkaUserSignUpRequest(user.getUserId(), user.getEmail(), user.getIsDeleted());
-        kafkaProducer.sendSignUp(kafkaUserSignUpRequest, "signUp");
+        kafkaProducer.sendSignUp(kafkaUserSignUpRequest, "signup-topic");
     }
 
     @Override
