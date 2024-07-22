@@ -49,6 +49,9 @@ public class UserServiceImpl implements  UserService{
     @Override
     public TokenResponse loginUser(UserLoginRequest userLoginRequest) {
         User user = userRepository.findByEmail(userLoginRequest.email());
+        if(user == null) {
+            throw new NoEmailException("존재하지 않는 이메일입니다.");
+        }
         if(user.getIsDeleted()){
             throw new UserDeleteException("해당 회원은 탈퇴한 회원입니다.");
         }
@@ -78,27 +81,27 @@ public class UserServiceImpl implements  UserService{
 
     @Override
     public void updateUser(TokenInfo tokenInfo, UserUpdateRequest userUpdateRequest) {
-        User byEmail = userRepository.findByEmail(tokenInfo.email());
-        if(byEmail == null) {
+        User user = userRepository.findByEmail(tokenInfo.email());
+        if(user == null) {
             throw new NoEmailException("존재하지 않는 이메일입니다.");
         }
         if(!Objects.equals(userUpdateRequest.password(), userUpdateRequest.passwordCheck())) {
             throw new PasswordMissmatchException("비밀번호가 일치하지 않습니다.");
         }
         String encodedPassword = passwordEncoder.encode(userUpdateRequest.password());
-        byEmail.updateUser(userUpdateRequest.name(),encodedPassword, userUpdateRequest.address(),userUpdateRequest.addressDetail());
-        userRepository.save(byEmail);
+        user.updateUser(userUpdateRequest.name(),encodedPassword, userUpdateRequest.address(),userUpdateRequest.addressDetail());
+        userRepository.save(user);
     }
 
     @Override
     public void deleteUser(TokenInfo tokenInfo) {
-        User byEmail = userRepository.findByEmail(tokenInfo.email());
-        if(byEmail == null) {
+        User user = userRepository.findByEmail(tokenInfo.email());
+        if(user == null) {
             throw new NoUserException("존재하지 않는 유저입니다.");
         }
-        byEmail.withDrawUser();
-        User user = userRepository.save(byEmail);
-        KafkaUserDeleteRequest kafkaUserDeleteRequest = new KafkaUserDeleteRequest(user.getUserId());
+        user.withDrawUser();
+        User savedUser = userRepository.save(user);
+        KafkaUserDeleteRequest kafkaUserDeleteRequest = new KafkaUserDeleteRequest(savedUser.getUserId());
         kafkaProducer.sendDelete(kafkaUserDeleteRequest, "delete-topic");
     }
 
