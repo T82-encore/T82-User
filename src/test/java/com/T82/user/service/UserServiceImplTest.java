@@ -189,7 +189,7 @@ class UserServiceImplTest {
             NoEmailException exception = assertThrows(NoEmailException.class, () -> {
                 userService.loginUser(userLoginRequest);
             });
-            assertEquals("해당 이메일이 존재하지 않습니다.", exception.getMessage());
+            assertEquals("존재하지 않는 이메일입니다.", exception.getMessage());
         }
 
         @Test
