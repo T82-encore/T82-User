@@ -18,7 +18,7 @@ public class KafkaProducer {
     private final KafkaTemplate<String, KafkaStatus<KafkaUserDeleteRequest>> kafkaDeleteTemplate;
 
     public void sendSignUp(KafkaUserSignUpRequest kafkaUserSignUpRequest, String topic) {
-        KafkaStatus<KafkaUserSignUpRequest> kafkaStatus = new KafkaStatus<>(kafkaUserSignUpRequest,"signup");
+        KafkaStatus<KafkaUserSignUpRequest> kafkaStatus = new KafkaStatus<>(kafkaUserSignUpRequest,"signUp");
         kafkaSignUpTemplate.send(topic, kafkaStatus);
     }
 
