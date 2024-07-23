@@ -43,7 +43,7 @@ public class UserServiceImpl implements  UserService{
         KafkaUserSignUpRequest kafkaUserSignUpRequest =
                 new KafkaUserSignUpRequest(user.getUserId(), user.getEmail(), user.getIsDeleted());
         System.out.println(kafkaUserSignUpRequest.userId());
-        kafkaProducer.sendSignUp(kafkaUserSignUpRequest, "signup-topic");
+        kafkaProducer.sendSignUp(kafkaUserSignUpRequest, "user");
     }
 
     @Override
@@ -102,7 +102,7 @@ public class UserServiceImpl implements  UserService{
         user.withDrawUser();
         User savedUser = userRepository.save(user);
         KafkaUserDeleteRequest kafkaUserDeleteRequest = new KafkaUserDeleteRequest(savedUser.getUserId());
-        kafkaProducer.sendDelete(kafkaUserDeleteRequest, "delete-topic");
+        kafkaProducer.sendDelete(kafkaUserDeleteRequest, "user");
     }
 
 
