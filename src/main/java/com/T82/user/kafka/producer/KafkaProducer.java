@@ -2,8 +2,7 @@ package com.T82.user.kafka.producer;
 
 
 import com.T82.user.kafka.dto.KafkaStatus;
-import com.T82.user.kafka.dto.request.KafkaUserDeleteRequest;
-import com.T82.user.kafka.dto.request.KafkaUserSignUpRequest;
+import com.T82.user.kafka.dto.request.KafkaUserRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -14,16 +13,16 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class KafkaProducer {
 
-    private final KafkaTemplate<String, KafkaStatus<KafkaUserSignUpRequest>> kafkaSignUpTemplate;
-    private final KafkaTemplate<String, KafkaStatus<KafkaUserDeleteRequest>> kafkaDeleteTemplate;
+    private final KafkaTemplate<String, KafkaStatus<KafkaUserRequest>> kafkaSignUpTemplate;
+    private final KafkaTemplate<String, KafkaStatus<KafkaUserRequest>> kafkaDeleteTemplate;
 
-    public void sendSignUp(KafkaUserSignUpRequest kafkaUserSignUpRequest, String topic) {
-        KafkaStatus<KafkaUserSignUpRequest> kafkaStatus = new KafkaStatus<>(kafkaUserSignUpRequest,"signUp");
+    public void sendSignUp(KafkaUserRequest kafkaUserRequest, String topic) {
+        KafkaStatus<KafkaUserRequest> kafkaStatus = new KafkaStatus<>(kafkaUserRequest,"signUp");
         kafkaSignUpTemplate.send(topic, kafkaStatus);
     }
 
-    public void sendDelete(KafkaUserDeleteRequest kafkaUserDeleteRequest, String topic) {
-        KafkaStatus<KafkaUserDeleteRequest> kafkaStatus = new KafkaStatus<>(kafkaUserDeleteRequest,"delete");
+    public void sendDelete(KafkaUserRequest kafkaUserRequest, String topic) {
+        KafkaStatus<KafkaUserRequest> kafkaStatus = new KafkaStatus<>(kafkaUserRequest,"delete");
         kafkaDeleteTemplate.send(topic, kafkaStatus);
     }
 }
