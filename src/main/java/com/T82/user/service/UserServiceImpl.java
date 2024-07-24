@@ -8,15 +8,13 @@ import com.T82.user.domain.repository.UserRepository;
 import com.T82.user.exception.*;
 import com.T82.user.global.utils.JwtUtil;
 import com.T82.user.global.utils.TokenInfo;
-import com.T82.user.kafka.dto.request.KafkaUserDeleteRequest;
-import com.T82.user.kafka.dto.request.KafkaUserSignUpRequest;
+import com.T82.user.kafka.dto.request.KafkaUserRequest;
 import com.T82.user.kafka.producer.KafkaProducer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -40,10 +38,8 @@ public class UserServiceImpl implements  UserService{
         }
         String encodedPassword = passwordEncoder.encode(userSignUpRequest.password());
         User user = userRepository.save(userSignUpRequest.toEntity(encodedPassword));
-        KafkaUserSignUpRequest kafkaUserSignUpRequest =
-                new KafkaUserSignUpRequest(user.getUserId(), user.getEmail(), user.getIsDeleted());
-        System.out.println(kafkaUserSignUpRequest.userId());
-        kafkaProducer.sendSignUp(kafkaUserSignUpRequest, "userTopic");
+        KafkaUserRequest kafkaUserRequest = new KafkaUserRequest(user.getUserId(), user.getEmail());
+        kafkaProducer.sendSignUp(kafkaUserRequest, "userTopic");
     }
 
     @Override
@@ -101,8 +97,8 @@ public class UserServiceImpl implements  UserService{
         }
         user.withDrawUser();
         User savedUser = userRepository.save(user);
-        KafkaUserDeleteRequest kafkaUserDeleteRequest = new KafkaUserDeleteRequest(savedUser.getUserId());
-        kafkaProducer.sendDelete(kafkaUserDeleteRequest, "userTopic");
+        KafkaUserRequest kafkaUserRequest = new KafkaUserRequest(user.getUserId(), user.getEmail());
+        kafkaProducer.sendDelete(kafkaUserRequest, "userTopic");
     }
 
 
