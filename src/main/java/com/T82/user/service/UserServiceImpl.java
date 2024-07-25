@@ -55,7 +55,6 @@ public class UserServiceImpl implements  UserService{
             throw new PasswordMissmatchException("비밀번호가 일치하지 않습니다.");
         }
         String token =jwtUtil.generateToken(user);
-        System.out.println(token);
         return TokenResponse.from(token);
     }
 
@@ -96,7 +95,7 @@ public class UserServiceImpl implements  UserService{
             throw new NoUserException("존재하지 않는 유저입니다.");
         }
         user.withDrawUser();
-        User savedUser = userRepository.save(user);
+        userRepository.save(user);
         KafkaUserRequest kafkaUserRequest = new KafkaUserRequest(user.getUserId(), user.getEmail());
         kafkaProducer.sendDelete(kafkaUserRequest, "userTopic");
     }

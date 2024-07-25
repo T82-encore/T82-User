@@ -28,11 +28,8 @@ public class JwtUtil {
     public String generateToken(User user) {
         return Jwts.builder()
                 .claim("id", user.getUserId())
-                .claim("email",user.getEmail())
-//                .claim("birthDate",user.getBirthDate().toString())
-//                .claim("name",user.getName())
-//                .claim("phoneNumber",user.getPhoneNumber())
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .claim("email", user.getEmail())
+                .expiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(this.secret)
                 .compact();
     }
