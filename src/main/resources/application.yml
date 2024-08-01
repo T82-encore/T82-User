@@ -13,12 +13,24 @@ spring:
     producer:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
     bootstrap-servers: 34.66.127.160:9094
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: [ 위에서 확인한 클라이언트 ID ]
+            client-secret: [ 위에서 확인한 클라이언트 비밀번호 ]
+            scope:
+              - email
+              - profile
 server:
   port: 8000
 
 jwt:
   secret: VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9XkHa
   expiration: 1000000
+
+
 
 #logging:
 #  level:
