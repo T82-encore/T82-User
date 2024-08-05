@@ -19,6 +19,15 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
 
+    @GetMapping("/good")
+    public ResponseEntity<String> firstPage() {
+        return ResponseEntity.ok("초기화면");
+    }
+
+    @GetMapping("/bad")
+    public ResponseEntity<String> padPage() {
+        return ResponseEntity.ok("실패");
+    }
 //    유저 회원가입
     @PostMapping("/signup")
     public ResponseEntity<String> signUp(@Validated @RequestBody UserSignUpRequest userSignUpRequest) {
