@@ -1,6 +1,8 @@
 package com.T82.user.global.config;
 
+import com.T82.user.api.CustomSuccessHandler;
 import com.T82.user.global.utils.JwtAuthenticationFilter;
+import com.T82.user.api.CustomOauth2UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -25,6 +27,8 @@ public class SecurityConfig {
     //JwtUtil 주입
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
+    private final CustomSuccessHandler customSuccessHandler;
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
@@ -36,7 +40,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, CustomOauth2UserService customOauth2UserService) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable);
         http.formLogin(AbstractHttpConfigurer::disable);
         http.httpBasic(AbstractHttpConfigurer::disable);
@@ -48,7 +52,8 @@ public class SecurityConfig {
             return corsConfiguration;
         }));
         http.authorizeHttpRequests(auth ->
-                auth.requestMatchers("/actuator/**","/api/v1/users/signup","/api/v1/users/login")
+                auth.requestMatchers("/actuator/**","/api/v1/users/signup",
+                                "/api/v1/users/login","/login/oauth2/**", "/oauth2/**")
                         .permitAll()
                         .anyRequest()
                         .authenticated()
@@ -61,9 +66,22 @@ public class SecurityConfig {
                         response.sendError(HttpServletResponse.SC_FORBIDDEN, "Forbidden"))
         );
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
         // 세션을 사용하지 않기 때문에 STATELESS로 설정
         http.sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+//        http.oauth2Login(oauth2 -> oauth2
+//                .userInfoEndpoint(userInfo -> userInfo
+//                        .userService(customOauth2UserService)
+//        );
+        http.oauth2Login(oauth -> oauth
+                .userInfoEndpoint(userInfo -> userInfo
+                        .userService(customOauth2UserService))
+
+                        .successHandler(customSuccessHandler)
+                //실패했을때 갈 url 주소를 지정해줘야될듯(나중에)
+                .failureUrl("/api/v1/users/bad"));
+//                .defaultSuccessUrl("/api/v1/users/good")
+//                .failureUrl("/api/v1/users/bad"));
+
         return http.build();
     }
 }
