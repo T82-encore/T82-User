@@ -57,7 +57,8 @@ class UserServiceImplTest {
                     LocalDate.now(),
                     "010-1234-5678",
                     "어딘가-123",
-                    "어딘가-123"
+                    "어딘가-123",
+                    true
             );
             int lengthBefore = userRepository.findAll().size();
             //when
@@ -77,7 +78,8 @@ class UserServiceImplTest {
                     LocalDate.now(),
                     "010-1234-5678",
                     "어딘가-123",
-                    "어딘가-123"
+                    "어딘가-123",
+                    true
             );
             userService.signUpUser(userSignUpRequest);
             //when & then
@@ -97,7 +99,8 @@ class UserServiceImplTest {
                     LocalDate.now(),
                     "010-1234-5678",
                     "어딘가-123",
-                    "어딘가-123"
+                    "어딘가-123",
+                    true
             );
 
             //when & then
@@ -118,7 +121,8 @@ class UserServiceImplTest {
                     LocalDate.now(),
                     "010-1234-5678",
                     "어딘가-123",
-                    "어딘가-123"
+                    "어딘가-123",
+                    true
             );
             userService.signUpUser(userSignUpRequest1);
 
@@ -130,7 +134,8 @@ class UserServiceImplTest {
                     LocalDate.now(),
                     "010-1234-5678",
                     "어딘가-123",
-                    "어딘가-123"
+                    "어딘가-123",
+                    true
             );
 
             //when & then
@@ -155,7 +160,8 @@ class UserServiceImplTest {
                     LocalDate.now(),
                     "010-1234-5678",
                     "어딘가-123",
-                    "어딘가-123"
+                    "어딘가-123",
+                    true
             );
             userService.signUpUser(userSignUpRequest);
 
@@ -178,7 +184,8 @@ class UserServiceImplTest {
                     LocalDate.now(),
                     "010-1234-5678",
                     "어딘가-123",
-                    "어딘가-123"
+                    "어딘가-123",
+                    true
             );
             userService.signUpUser(userSignUpRequest);
 
@@ -203,7 +210,8 @@ class UserServiceImplTest {
                     LocalDate.now(),
                     "010-1234-5678",
                     "어딘가-123",
-                    "어딘가-123"
+                    "어딘가-123",
+                    true
             );
             userService.signUpUser(userSignUpRequest);
 
@@ -232,7 +240,8 @@ class UserServiceImplTest {
                     LocalDate.now(),
                     "010-1234-5678",
                     "어딘가-123",
-                    "어딘가-123"
+                    "어딘가-123",
+                    true
             );
             userService.signUpUser(userSignUpRequest);
             UserLoginRequest userLoginRequest = new UserLoginRequest(
@@ -262,7 +271,8 @@ class UserServiceImplTest {
                     LocalDate.now(),
                     "010-1234-5678",
                     "어딘가-123",
-                    "어딘가-123"
+                    "어딘가-123",
+                    true
             );
             userService.signUpUser(userSignUpRequest);
             UserLoginRequest userLoginRequest = new UserLoginRequest(
@@ -300,7 +310,8 @@ class UserServiceImplTest {
                     LocalDate.now(),
                     "010-1234-5678",
                     "어딘가-123",
-                    "어딘가-123"
+                    "어딘가-123",
+                    true
             );
             userService.signUpUser(userSignUpRequest);
             UserLoginRequest userLoginRequest = new UserLoginRequest(
@@ -339,7 +350,8 @@ class UserServiceImplTest {
                     LocalDate.now(),
                     "010-1234-5678",
                     "어딘가-123",
-                    "어딘가-123"
+                    "어딘가-123",
+                    true
             );
             userService.signUpUser(userSignUpRequest);
 
@@ -379,7 +391,8 @@ class UserServiceImplTest {
                     LocalDate.now(),
                     "010-1234-5678",
                     "어딘가-123",
-                    "어딘가-123"
+                    "어딘가-123",
+                    true
             );
             userService.signUpUser(userSignUpRequest);
             UserLoginRequest userLoginRequest = new UserLoginRequest(
@@ -407,7 +420,8 @@ class UserServiceImplTest {
                     LocalDate.now(),
                     "010-1234-5678",
                     "어딘가-123",
-                    "어딘가-123"
+                    "어딘가-123",
+                    true
             );
             userService.signUpUser(userSignUpRequest);
             UserLoginRequest userLoginRequest = new UserLoginRequest(
