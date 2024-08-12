@@ -26,19 +26,21 @@ public record UserSignUpRequest(
         @Pattern(regexp = "^\\d{3}-\\d{3,4}-\\d{4}$", message = "전화번호 형식이 맞지 않습니다. xxx-xxxx-xxxx")
         String phoneNumber,
         String address,
-        String addressDetail
+        String addressDetail,
+        Boolean isArtist
 ) {
-    public User toEntity(String encodedPasword){
-        return User.builder()
-                .email(email)
-                .password(encodedPasword)
-                .name(name)
-                .birthDate(birthDate)
-                .phoneNumber(phoneNumber)
-                .address(address)
-                .addressDetail(addressDetail)
-                .isDeleted(false)
-                .createdDate(LocalDate.now())
-                .build();
-    }
+        public User toEntity(String encodedPassword){
+                return User.builder()
+                        .email(email)
+                        .password(encodedPassword)
+                        .name(name)
+                        .birthDate(birthDate)
+                        .phoneNumber(phoneNumber)
+                        .address(address)
+                        .addressDetail(addressDetail)
+                        .isDeleted(false)
+                        .createdDate(LocalDate.now())
+                        .isArtist(isArtist != null ? isArtist : false)
+                        .build();
+        }
 }

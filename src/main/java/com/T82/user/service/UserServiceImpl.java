@@ -52,7 +52,7 @@ public class UserServiceImpl implements  UserService{
         }
         String encodedPassword = passwordEncoder.encode(userSignUpRequest.password());
         User user = userRepository.save(userSignUpRequest.toEntity(encodedPassword));
-        KafkaUserRequest kafkaUserRequest = new KafkaUserRequest(user.getUserId(), user.getEmail());
+        KafkaUserRequest kafkaUserRequest = new KafkaUserRequest(user.getUserId(), user.getEmail(),user.getName(),user.getIsArtist());
         kafkaProducer.sendSignUp(kafkaUserRequest, "userTopic");
     }
 
@@ -110,7 +110,7 @@ public class UserServiceImpl implements  UserService{
         }
         user.withDrawUser();
         userRepository.save(user);
-        KafkaUserRequest kafkaUserRequest = new KafkaUserRequest(user.getUserId(), user.getEmail());
+        KafkaUserRequest kafkaUserRequest = new KafkaUserRequest(user.getUserId(), user.getEmail(),user.getName(),user.getIsArtist());
         kafkaProducer.sendDelete(kafkaUserRequest, "userTopic");
     }
 
@@ -141,7 +141,7 @@ public class UserServiceImpl implements  UserService{
                         .createdDate(LocalDate.now())
                         .build();
                 userRepository.save(user);
-                KafkaUserRequest kafkaUserRequest = new KafkaUserRequest(user.getUserId(), user.getEmail());
+                KafkaUserRequest kafkaUserRequest = new KafkaUserRequest(user.getUserId(), user.getEmail(),user.getName(),user.getIsArtist());
                 System.out.println("만들어진거:" + kafkaUserRequest);
                 kafkaProducer.sendSignUp(kafkaUserRequest, "userTopic");
 
@@ -193,7 +193,7 @@ public class UserServiceImpl implements  UserService{
                         .createdDate(LocalDate.now())
                         .build();
                 userRepository.save(user);
-                KafkaUserRequest kafkaUserRequest = new KafkaUserRequest(user.getUserId(), user.getEmail());
+                KafkaUserRequest kafkaUserRequest = new KafkaUserRequest(user.getUserId(), user.getEmail(), user.getName(), user.getIsArtist());
                 System.out.println("kafka : "+kafkaUserRequest);
                 kafkaProducer.sendSignUp(kafkaUserRequest, "userTopic");
             } else if (user.getIsDeleted()) {
@@ -214,7 +214,4 @@ public class UserServiceImpl implements  UserService{
             throw e;
         }
     }
-
-
-
 }

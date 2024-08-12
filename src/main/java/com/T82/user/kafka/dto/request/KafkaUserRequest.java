@@ -4,6 +4,8 @@ import java.util.UUID;
 
 public record KafkaUserRequest(
         UUID userId,
-        String email
+        String email,
+        String name,
+        Boolean isArtist
 ) {
 }
