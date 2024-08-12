@@ -10,12 +10,24 @@ import com.T82.user.global.utils.JwtUtil;
 import com.T82.user.global.utils.TokenInfo;
 import com.T82.user.kafka.dto.request.KafkaUserRequest;
 import com.T82.user.kafka.producer.KafkaProducer;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements  UserService{
@@ -23,6 +35,8 @@ public class UserServiceImpl implements  UserService{
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final KafkaProducer kafkaProducer;
+    private final ObjectMapper objectMapper;
+    private final RestTemplate restTemplate;
 
     @Override
     public void signUpUser(UserSignUpRequest userSignUpRequest) {
@@ -98,6 +112,107 @@ public class UserServiceImpl implements  UserService{
         userRepository.save(user);
         KafkaUserRequest kafkaUserRequest = new KafkaUserRequest(user.getUserId(), user.getEmail());
         kafkaProducer.sendDelete(kafkaUserRequest, "userTopic");
+    }
+
+    public TokenResponse kakaoLogin(String accessToken){
+        String url = "https://kapi.kakao.com/v2/user/me";
+        log.info("Request URL: " + url);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + accessToken);
+        headers.set("Content-Type", "application/json");
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+        try {
+            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+            log.info("response : " + response);
+            JsonNode userInfo = objectMapper.readTree(response.getBody());
+
+            String id = userInfo.path("id").asText();
+            String nickname = userInfo.path("properties").path("nickname").asText();
+            String email = userInfo.path("kakao_account").path("email").asText();
+
+            User user = userRepository.findByEmail(email);
+            if(user == null) {
+                user = User.builder()
+                        .email(email)
+                        .name(nickname)
+                        .provider("kakao")
+                        .providerId(id)
+                        .isDeleted(false)
+                        .createdDate(LocalDate.now())
+                        .build();
+                userRepository.save(user);
+                KafkaUserRequest kafkaUserRequest = new KafkaUserRequest(user.getUserId(), user.getEmail());
+                System.out.println("만들어진거:" + kafkaUserRequest);
+                kafkaProducer.sendSignUp(kafkaUserRequest, "userTopic");
+
+            }else if (user.getIsDeleted()) {
+                throw new UserDeleteException("해당 회원은 탈퇴한 회원입니다.");
+            }
+            String token = jwtUtil.generateToken(user);
+            log.info("Generated Token: " + token);
+            return TokenResponse.from(token);
+        } catch (HttpClientErrorException e) {
+            log.info("HTTP Status Code: " + e.getStatusCode());
+            log.info("Response Body: " + e.getResponseBodyAsString());
+            throw e;
+        }catch (JsonProcessingException e) {
+            log.info("JSON 처리 중 오류 발생: " + e.getMessage());
+            throw new RuntimeException("JSON 처리 중 오류 발생", e);
+        }
+        catch (Exception e) {
+            log.info("예상치 못한 오류 발생: " + e.getMessage());
+            throw e;
+        }
+    }
+
+    public TokenResponse googleLogin(String accessToken) {
+        String url = "https://www.googleapis.com/userinfo/v2/me";
+        log.info("Request URL: " + url);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + accessToken);
+        headers.set("Content-Type", "application/json");
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        try {
+            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+            JsonNode userInfo = objectMapper.readTree(response.getBody());
+
+            String id = userInfo.path("id").asText();
+            String name = userInfo.path("name").asText();
+            String email = userInfo.path("email").asText();
+
+            User user = userRepository.findByEmail(email);
+            if (user == null) {
+                user = User.builder()
+                        .email(email)
+                        .name(name)
+                        .provider("google")
+                        .providerId(id)
+                        .isDeleted(false)
+                        .createdDate(LocalDate.now())
+                        .build();
+                userRepository.save(user);
+                KafkaUserRequest kafkaUserRequest = new KafkaUserRequest(user.getUserId(), user.getEmail());
+                System.out.println("kafka : "+kafkaUserRequest);
+                kafkaProducer.sendSignUp(kafkaUserRequest, "userTopic");
+            } else if (user.getIsDeleted()) {
+                throw new UserDeleteException("해당 회원은 탈퇴한 회원입니다.");
+            }
+            String token = jwtUtil.generateToken(user);
+            log.info("Generated Token: " + token);
+            return TokenResponse.from(token);
+        } catch (HttpClientErrorException e) {
+            log.info("HTTP Status Code: " + e.getStatusCode());
+            log.info("Response Body: " + e.getResponseBodyAsString());
+            throw e;
+        } catch (JsonProcessingException e) {
+            log.info("JSON 처리 중 오류 발생: " + e.getMessage());
+            throw new RuntimeException("JSON 처리 중 오류 발생", e);
+        } catch (Exception e) {
+            log.info("예상치 못한 오류 발생: " + e.getMessage());
+            throw e;
+        }
     }
 
 

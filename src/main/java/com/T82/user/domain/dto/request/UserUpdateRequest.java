@@ -1,11 +1,9 @@
 package com.T82.user.domain.dto.request;
 
-import com.T82.user.domain.entity.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-import java.time.LocalDate;
 
 public record UserUpdateRequest(
         @NotBlank

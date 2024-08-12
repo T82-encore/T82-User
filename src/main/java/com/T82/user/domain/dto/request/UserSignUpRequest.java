@@ -4,7 +4,6 @@ import com.T82.user.domain.entity.User;
 import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 public record UserSignUpRequest(
         @NotBlank

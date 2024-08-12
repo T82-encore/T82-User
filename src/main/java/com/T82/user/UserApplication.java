@@ -7,6 +7,7 @@ import org.springframework.kafka.support.converter.JsonMessageConverter;
 import org.springframework.kafka.support.converter.RecordMessageConverter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 public class UserApplication {
@@ -18,6 +19,11 @@ public class UserApplication {
 	@Bean
 	public RecordMessageConverter converter() {
 		return new JsonMessageConverter();
+	}
+
+	@Bean
+	public RestTemplate restTemplate(){
+		return new RestTemplate();
 	}
 
 	public static void main(String[] args) {

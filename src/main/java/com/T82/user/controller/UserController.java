@@ -32,6 +32,20 @@ public class UserController {
         return  ResponseEntity.status(HttpStatus.OK).body(userService.loginUser(userLoginRequest));
     }
 
+    //    카카오 로그인 시
+    @PostMapping("/login/kakao")
+    public ResponseEntity<TokenResponse> kakaoLogin(@RequestHeader("Authorization") String accessToken) {
+        System.out.println("컨트롤러 들어옴");
+        return  ResponseEntity.status(HttpStatus.OK).body(userService.kakaoLogin(accessToken));
+
+    }
+    //    구글 로그인 시
+    @PostMapping("/login/google")
+    public ResponseEntity<TokenResponse> googleLogin(@RequestHeader("Authorization") String accessToken) {
+        System.out.println("구글 로그인 컨트롤러 들어옴");
+        return ResponseEntity.status(HttpStatus.OK).body(userService.googleLogin(accessToken));
+    }
+
 //    토큰 재발급
     @GetMapping("/refresh")
     public TokenResponse refresh(@AuthenticationPrincipal TokenInfo tokenInfo) {

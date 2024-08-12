@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.UUID;
 
 @Entity
@@ -22,16 +21,16 @@ public class User {
     @Column(name = "EMAIL", nullable = false)
     private String email;
 
-    @Column(name = "PASSWORD", nullable = false)
+    @Column(name = "PASSWORD")
     private String password;
 
     @Column(name = "NAME", nullable = false)
     private String name;
 
-    @Column(name = "BIRTH_DATE", nullable = false)
+    @Column(name = "BIRTH_DATE")
     private LocalDate birthDate;
 
-    @Column(name = "PHONE_NUMBER", nullable = false)
+    @Column(name = "PHONE_NUMBER")
     private String phoneNumber;
 
     @Column(name = "ADDRESS")
@@ -48,6 +47,12 @@ public class User {
 
     @Column(name = "MODIFIED_DATE")
     private LocalDate modifiedDate;
+
+    @Column(name = "PROVIDER")
+    private String provider;
+
+    @Column(name = "PROVIDER_ID")
+    private String providerId;
 
     public void withDrawUser() {
         this.isDeleted = true;

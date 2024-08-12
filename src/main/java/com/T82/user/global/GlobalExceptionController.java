@@ -5,15 +5,12 @@ import com.T82.user.exception.*;
 import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionController {
@@ -27,21 +24,21 @@ public class GlobalExceptionController {
         return ResponseEntity.badRequest().body(errors);
     }
 
-    // Password 일치하지 않을때 예외 처리
+//    Password 일치하지 않을때 예외 처리
     @ExceptionHandler(PasswordMissmatchException.class)
     public ResponseEntity<ErrorResponse> passwordException(PasswordMissmatchException ex) {
         ErrorResponse error = new ErrorResponse("password", ex.getMessage());
         return ResponseEntity.badRequest().body(error);
     }
 
-    // 핸드폰 번호 중복될때 예외처리
+//    핸드폰 번호 중복될때 예외처리
     @ExceptionHandler(DuplicateNumberException.class)
     public ResponseEntity<ErrorResponse> duplicateNumberException(DuplicateNumberException ex) {
         ErrorResponse error = new ErrorResponse("phoneNumber", ex.getMessage());
         return ResponseEntity.badRequest().body(error);
     }
 
-    // 이메일 중복될때 예외처리
+//    이메일 중복될때 예외처리
     @ExceptionHandler(DuplicateEmailException.class)
     public ResponseEntity<ErrorResponse> duplicateEmailException(DuplicateEmailException ex) {
         ErrorResponse error = new ErrorResponse("email", ex.getMessage());
@@ -55,14 +52,14 @@ public class GlobalExceptionController {
         return ResponseEntity.badRequest().body(error);
     }
 
-    //    이메일 없을때 예외처리
+//    이메일 없을때 예외처리
     @ExceptionHandler(NoEmailException.class)
     public ResponseEntity<ErrorResponse> noEmailException(NoEmailException ex) {
         ErrorResponse error = new ErrorResponse("email", ex.getMessage());
         return ResponseEntity.badRequest().body(error);
     }
 
-    //    회원 탈퇴된 상태일때 예외처리
+//    회원 탈퇴된 상태일때 예외처리
     @ExceptionHandler(UserDeleteException.class)
     public ResponseEntity<ErrorResponse> userDeleteException(UserDeleteException ex) {
         ErrorResponse error = new ErrorResponse("user", ex.getMessage());
