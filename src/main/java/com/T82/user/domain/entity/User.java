@@ -54,6 +54,9 @@ public class User {
     @Column(name = "PROVIDER_ID")
     private String providerId;
 
+    @Column(name = "IS_ARTIST")
+    private Boolean isArtist;
+
     public void withDrawUser() {
         this.isDeleted = true;
     }
