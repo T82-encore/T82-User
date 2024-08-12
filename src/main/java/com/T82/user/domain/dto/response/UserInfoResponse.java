@@ -2,7 +2,6 @@ package com.T82.user.domain.dto.response;
 
 import com.T82.user.domain.entity.User;
 
-import java.time.LocalDate;
 
 public record UserInfoResponse(
         String name,

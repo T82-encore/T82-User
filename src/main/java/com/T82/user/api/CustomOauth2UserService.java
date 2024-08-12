@@ -21,6 +21,7 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
+        log.info("Loading user: {}", oAuth2User);
         log.info("getAttributes : {}",oAuth2User.getAttributes());
 
         String provider = userRequest.getClientRegistration().getRegistrationId();
@@ -38,36 +39,8 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
             oAuth2UserInfo = new KakaoUserDetails(oAuth2User.getAttributes());
         }
 
-        String username = oAuth2UserInfo.getProvider() + " " + oAuth2UserInfo.getProviderId();
-//        String email = oAuth2UserInfo.getEmail();
-//        User byEmail = userRepository.findByEmail(email);
-//        if(byEmail == null){
-//            user = User.builder()
-//                    .email(email)
-//                    .name(name)
-//                    .provider(provider)
-//                    .isDeleted(false)
-//                    .createdDate(LocalDate.now())
-//                    .providerId(providerId)
-//                    .build();
-//            userRepository.save(user);
-//        }
-//
-//
-//        UserDTO userDTO = new UserDTO();
-//        userDTO.setUsername(username);
-//        userDTO.setName(oAuth2UserInfo.getName());
-//
-//
-//
-//        return new CustomOauth2UserDetails(userDTO);
-
-
-
-
         String providerId = oAuth2UserInfo.getProviderId();
         String email = oAuth2UserInfo.getEmail();
-        String loginId = provider + "_" + providerId;
         String name = oAuth2UserInfo.getName();
 
         User findEmail = userRepository.findByEmail(email);

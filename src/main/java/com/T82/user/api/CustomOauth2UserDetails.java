@@ -2,6 +2,7 @@ package com.T82.user.api;
 
 import com.T82.user.domain.entity.User;
 import org.springframework.security.core.GrantedAuthority;
+
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -71,34 +72,4 @@ public class CustomOauth2UserDetails implements UserDetails, OAuth2User {
     public boolean isEnabled() {
         return UserDetails.super.isEnabled();
     }
-
-
-//    private final UserDTO userDTO;
-//    public CustomOauth2UserDetails(UserDTO userDTO) {
-//        this.userDTO = userDTO;
-//    }
-//    @Override
-//    public String getName() {
-//        return userDTO.getName();
-//    }
-//
-//    @Override
-//    public Map<String, Object> getAttributes() {
-//        return Map.of();
-//    }
-//
-//    @Override
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//        return List.of();
-//    }
-//
-//    @Override
-//    public String getPassword() {
-//        return "";
-//    }
-//
-//    @Override
-//    public String getUsername() {
-//        return userDTO.getUsername();
-//    }
 }

@@ -53,12 +53,11 @@ public class SecurityConfig {
         }));
         http.authorizeHttpRequests(auth ->
                 auth.requestMatchers("/actuator/**","/api/v1/users/signup",
-                                "/api/v1/users/login","/login/oauth2/**", "/oauth2/**")
+                                "/api/v1/users/login/**","/login/oauth2/**", "/oauth2/**")
                         .permitAll()
                         .anyRequest()
                         .authenticated()
         );
-//        http.exceptionHandling(AbstractHttpConfigurer::disable);
         http.exceptionHandling(exception -> exception
                 .authenticationEntryPoint((request, response, authException) ->
                         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"))
@@ -68,19 +67,10 @@ public class SecurityConfig {
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         // 세션을 사용하지 않기 때문에 STATELESS로 설정
         http.sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-//        http.oauth2Login(oauth2 -> oauth2
-//                .userInfoEndpoint(userInfo -> userInfo
-//                        .userService(customOauth2UserService)
-//        );
         http.oauth2Login(oauth -> oauth
                 .userInfoEndpoint(userInfo -> userInfo
                         .userService(customOauth2UserService))
-
-                        .successHandler(customSuccessHandler)
-                //실패했을때 갈 url 주소를 지정해줘야될듯(나중에)
-                .failureUrl("/api/v1/users/bad"));
-//                .defaultSuccessUrl("/api/v1/users/good")
-//                .failureUrl("/api/v1/users/bad"));
+                        .successHandler(customSuccessHandler));
 
         return http.build();
     }

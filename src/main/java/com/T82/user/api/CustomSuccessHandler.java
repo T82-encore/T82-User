@@ -1,6 +1,5 @@
 package com.T82.user.api;
 
-import com.T82.user.domain.dto.response.TokenResponse;
 import com.T82.user.domain.entity.User;
 import com.T82.user.global.utils.JwtUtil;
 import jakarta.servlet.ServletException;
@@ -30,6 +29,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                 .userId(UUID.fromString(customOauth2UserDetails.getName()))
                 .email(customOauth2UserDetails.getEmail())
                 .build();
+        System.out.println(user.getUserId());
         String token = jwtUtil.generateToken(user);
 
         response.setContentType("application/json");
@@ -40,8 +40,6 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         writer.write("\"tokenType\":\"Bearer\"");
         writer.write("}");
         writer.flush();
-
-
         // 추후에 프론트 주소 넣어줘야됨(아닐수도)
 //        response.sendRedirect("http://localhost:8080/api/v1/users/good");
     }
