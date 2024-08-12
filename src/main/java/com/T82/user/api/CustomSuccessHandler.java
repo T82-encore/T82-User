@@ -40,7 +40,5 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         writer.write("\"tokenType\":\"Bearer\"");
         writer.write("}");
         writer.flush();
-        // 추후에 프론트 주소 넣어줘야됨(아닐수도)
-//        response.sendRedirect("http://localhost:8080/api/v1/users/good");
     }
 }

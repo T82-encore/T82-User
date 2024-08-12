@@ -20,7 +20,6 @@ public record UserUpdateRequest(
         String passwordCheck,
         String address,
         String addressDetail
-
 ) {
 
 }
