@@ -57,6 +57,9 @@ public class User {
     @Column(name = "IS_ARTIST")
     private Boolean isArtist;
 
+    @Column(name = "PROFILE_URL")
+    private String profileUrl;
+
     public void withDrawUser() {
         this.isDeleted = true;
     }
