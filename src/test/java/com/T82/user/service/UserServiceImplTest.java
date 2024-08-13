@@ -336,7 +336,8 @@ class UserServiceImplTest {
                     "1234",
                     "1234",
                     "바뀐주소-1234",
-                    "바뀐상세주소-123"
+                    "바뀐상세주소-123",
+                    "https://via.placeholder.com/200"
             );
             //when
             userService.updateUser(tokenInfo, userUpdateRequest);
@@ -378,7 +379,8 @@ class UserServiceImplTest {
                     "1111",
                     "111",
                     "바뀐주소",
-                    "바뀐 상세주소"
+                    "바뀐 상세주소",
+                    "https://via.placeholder.com/200"
             );
 
             // when & then

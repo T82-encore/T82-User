@@ -52,7 +52,7 @@ public class UserServiceImpl implements  UserService{
         }
         String encodedPassword = passwordEncoder.encode(userSignUpRequest.password());
         User user = userRepository.save(userSignUpRequest.toEntity(encodedPassword));
-        KafkaUserRequest kafkaUserRequest = new KafkaUserRequest(user.getUserId(), user.getEmail(),user.getName(),user.getIsArtist());
+        KafkaUserRequest kafkaUserRequest = new KafkaUserRequest(user.getUserId(), user.getEmail(),user.getName(),user.getIsArtist(),user.getProfileUrl());
         kafkaProducer.sendSignUp(kafkaUserRequest, "userTopic");
     }
 
@@ -98,8 +98,10 @@ public class UserServiceImpl implements  UserService{
             throw new PasswordMissmatchException("비밀번호가 일치하지 않습니다.");
         }
         String encodedPassword = passwordEncoder.encode(userUpdateRequest.password());
-        user.updateUser(userUpdateRequest.name(),encodedPassword, userUpdateRequest.address(),userUpdateRequest.addressDetail());
+        user.updateUser(userUpdateRequest.name(),encodedPassword, userUpdateRequest.address(),userUpdateRequest.addressDetail(),userUpdateRequest.profileUrl());
         userRepository.save(user);
+        KafkaUserRequest kafkaUserRequest = new KafkaUserRequest(user.getUserId(), user.getEmail(),user.getName(),user.getIsArtist(),user.getProfileUrl());
+        kafkaProducer.sendSignUp(kafkaUserRequest, "userTopic");
     }
 
     @Override
@@ -110,7 +112,7 @@ public class UserServiceImpl implements  UserService{
         }
         user.withDrawUser();
         userRepository.save(user);
-        KafkaUserRequest kafkaUserRequest = new KafkaUserRequest(user.getUserId(), user.getEmail(),user.getName(),user.getIsArtist());
+        KafkaUserRequest kafkaUserRequest = new KafkaUserRequest(user.getUserId(), user.getEmail(),user.getName(),user.getIsArtist(),user.getProfileUrl());
         kafkaProducer.sendDelete(kafkaUserRequest, "userTopic");
     }
 
@@ -137,12 +139,12 @@ public class UserServiceImpl implements  UserService{
                         .name(nickname)
                         .provider("kakao")
                         .providerId(id)
+                        .profileUrl(null)
                         .isDeleted(false)
                         .createdDate(LocalDate.now())
                         .build();
                 userRepository.save(user);
-                KafkaUserRequest kafkaUserRequest = new KafkaUserRequest(user.getUserId(), user.getEmail(),user.getName(),user.getIsArtist());
-                System.out.println("만들어진거:" + kafkaUserRequest);
+                KafkaUserRequest kafkaUserRequest = new KafkaUserRequest(user.getUserId(), user.getEmail(),user.getName(),user.getIsArtist(),user.getProfileUrl());
                 kafkaProducer.sendSignUp(kafkaUserRequest, "userTopic");
 
             }else if (user.getIsDeleted()) {
@@ -189,12 +191,12 @@ public class UserServiceImpl implements  UserService{
                         .name(name)
                         .provider("google")
                         .providerId(id)
+                        .profileUrl(null)
                         .isDeleted(false)
                         .createdDate(LocalDate.now())
                         .build();
                 userRepository.save(user);
-                KafkaUserRequest kafkaUserRequest = new KafkaUserRequest(user.getUserId(), user.getEmail(), user.getName(), user.getIsArtist());
-                System.out.println("kafka : "+kafkaUserRequest);
+                KafkaUserRequest kafkaUserRequest = new KafkaUserRequest(user.getUserId(), user.getEmail(), user.getName(), user.getIsArtist(),user.getProfileUrl());
                 kafkaProducer.sendSignUp(kafkaUserRequest, "userTopic");
             } else if (user.getIsDeleted()) {
                 throw new UserDeleteException("해당 회원은 탈퇴한 회원입니다.");

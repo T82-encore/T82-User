@@ -6,6 +6,7 @@ public record KafkaUserRequest(
         UUID userId,
         String email,
         String name,
-        Boolean isArtist
+        Boolean isArtist,
+        String profileUrl
 ) {
 }

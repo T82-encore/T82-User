@@ -64,11 +64,12 @@ public class User {
         this.isDeleted = true;
     }
 
-    public void updateUser(String name, String password, String address, String addressDetail) {
+    public void updateUser(String name, String password, String address, String addressDetail, String profileUrl) {
         this.name = name;
         this.password = password;
         this.address = address;
         this.addressDetail = addressDetail;
         this.modifiedDate = LocalDate.now();
+        this.profileUrl = profileUrl;
        }
 }
