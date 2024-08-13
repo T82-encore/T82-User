@@ -27,7 +27,8 @@ public record UserSignUpRequest(
         String phoneNumber,
         String address,
         String addressDetail,
-        Boolean isArtist
+        Boolean isArtist,
+        String profileUrl
 ) {
         public User toEntity(String encodedPassword){
                 return User.builder()
@@ -41,6 +42,7 @@ public record UserSignUpRequest(
                         .isDeleted(false)
                         .createdDate(LocalDate.now())
                         .isArtist(isArtist != null ? isArtist : false)
+                        .profileUrl(profileUrl)
                         .build();
         }
 }
