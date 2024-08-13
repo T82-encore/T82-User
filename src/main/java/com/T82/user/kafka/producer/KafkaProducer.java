@@ -14,11 +14,17 @@ import org.springframework.stereotype.Component;
 public class KafkaProducer {
 
     private final KafkaTemplate<String, KafkaStatus<KafkaUserRequest>> kafkaSignUpTemplate;
+    private final KafkaTemplate<String, KafkaStatus<KafkaUserRequest>> kafkaUpdateTemplate;
     private final KafkaTemplate<String, KafkaStatus<KafkaUserRequest>> kafkaDeleteTemplate;
 
     public void sendSignUp(KafkaUserRequest kafkaUserRequest, String topic) {
         KafkaStatus<KafkaUserRequest> kafkaStatus = new KafkaStatus<>(kafkaUserRequest,"signUp");
         kafkaSignUpTemplate.send(topic, kafkaStatus);
+    }
+
+    public void sendUpdate(KafkaUserRequest kafkaUserRequest, String topic) {
+        KafkaStatus<KafkaUserRequest> kafkaStatus = new KafkaStatus<>(kafkaUserRequest,"update");
+        kafkaDeleteTemplate.send(topic, kafkaStatus);
     }
 
     public void sendDelete(KafkaUserRequest kafkaUserRequest, String topic) {

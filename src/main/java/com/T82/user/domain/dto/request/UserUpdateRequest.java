@@ -19,7 +19,8 @@ public record UserUpdateRequest(
                 message = "문자, 숫자, 특수문자를 최소 1개 이상 포함하여 최소 8자, 최대 15자 사이로 입력해주세요.")
         String passwordCheck,
         String address,
-        String addressDetail
+        String addressDetail,
+        String profileUrl
 ) {
 
 }

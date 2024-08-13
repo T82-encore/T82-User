@@ -11,7 +11,6 @@ public record UserInfoResponse(
         String addressDetail,
         String phoneNumber,
         String profileUrl
-
 ) {
     public static UserInfoResponse from(User user){
         return new UserInfoResponse(user.getName(), user.getEmail(),user.getBirthDate().toString(),
