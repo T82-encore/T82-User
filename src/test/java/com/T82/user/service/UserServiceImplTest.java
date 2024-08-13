@@ -58,7 +58,8 @@ class UserServiceImplTest {
                     "010-1234-5678",
                     "어딘가-123",
                     "어딘가-123",
-                    true
+                    true,
+                    "https://via.placeholder.com/150"
             );
             int lengthBefore = userRepository.findAll().size();
             //when
@@ -79,7 +80,8 @@ class UserServiceImplTest {
                     "010-1234-5678",
                     "어딘가-123",
                     "어딘가-123",
-                    true
+                    true,
+                    "https://via.placeholder.com/150"
             );
             userService.signUpUser(userSignUpRequest);
             //when & then
@@ -100,7 +102,8 @@ class UserServiceImplTest {
                     "010-1234-5678",
                     "어딘가-123",
                     "어딘가-123",
-                    true
+                    true,
+                    "https://via.placeholder.com/150"
             );
 
             //when & then
@@ -122,7 +125,8 @@ class UserServiceImplTest {
                     "010-1234-5678",
                     "어딘가-123",
                     "어딘가-123",
-                    true
+                    true,
+                    "https://via.placeholder.com/150"
             );
             userService.signUpUser(userSignUpRequest1);
 
@@ -135,7 +139,8 @@ class UserServiceImplTest {
                     "010-1234-5678",
                     "어딘가-123",
                     "어딘가-123",
-                    true
+                    true,
+                    "https://via.placeholder.com/150"
             );
 
             //when & then
@@ -161,7 +166,8 @@ class UserServiceImplTest {
                     "010-1234-5678",
                     "어딘가-123",
                     "어딘가-123",
-                    true
+                    true,
+                    "https://via.placeholder.com/150"
             );
             userService.signUpUser(userSignUpRequest);
 
@@ -185,7 +191,8 @@ class UserServiceImplTest {
                     "010-1234-5678",
                     "어딘가-123",
                     "어딘가-123",
-                    true
+                    true,
+                    "https://via.placeholder.com/150"
             );
             userService.signUpUser(userSignUpRequest);
 
@@ -211,7 +218,8 @@ class UserServiceImplTest {
                     "010-1234-5678",
                     "어딘가-123",
                     "어딘가-123",
-                    true
+                    true,
+                    "https://via.placeholder.com/150"
             );
             userService.signUpUser(userSignUpRequest);
 
@@ -241,7 +249,8 @@ class UserServiceImplTest {
                     "010-1234-5678",
                     "어딘가-123",
                     "어딘가-123",
-                    true
+                    true,
+                    "https://via.placeholder.com/150"
             );
             userService.signUpUser(userSignUpRequest);
             UserLoginRequest userLoginRequest = new UserLoginRequest(
@@ -272,7 +281,8 @@ class UserServiceImplTest {
                     "010-1234-5678",
                     "어딘가-123",
                     "어딘가-123",
-                    true
+                    true,
+                    "https://via.placeholder.com/150"
             );
             userService.signUpUser(userSignUpRequest);
             UserLoginRequest userLoginRequest = new UserLoginRequest(
@@ -311,7 +321,8 @@ class UserServiceImplTest {
                     "010-1234-5678",
                     "어딘가-123",
                     "어딘가-123",
-                    true
+                    true,
+                    "https://via.placeholder.com/150"
             );
             userService.signUpUser(userSignUpRequest);
             UserLoginRequest userLoginRequest = new UserLoginRequest(
@@ -351,7 +362,8 @@ class UserServiceImplTest {
                     "010-1234-5678",
                     "어딘가-123",
                     "어딘가-123",
-                    true
+                    true,
+                    "https://via.placeholder.com/150"
             );
             userService.signUpUser(userSignUpRequest);
 
@@ -392,7 +404,8 @@ class UserServiceImplTest {
                     "010-1234-5678",
                     "어딘가-123",
                     "어딘가-123",
-                    true
+                    true,
+                    "https://via.placeholder.com/150"
             );
             userService.signUpUser(userSignUpRequest);
             UserLoginRequest userLoginRequest = new UserLoginRequest(
@@ -421,7 +434,8 @@ class UserServiceImplTest {
                     "010-1234-5678",
                     "어딘가-123",
                     "어딘가-123",
-                    true
+                    true,
+                    "https://via.placeholder.com/150"
             );
             userService.signUpUser(userSignUpRequest);
             UserLoginRequest userLoginRequest = new UserLoginRequest(
