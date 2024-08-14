@@ -29,7 +29,7 @@ public class KafkaProducer {
     }
 
     public void sendDeviceToken(KafkaAllowRequest kafkaAllowRequest, String topic) {
-        KafkaStatus<KafkaAllowRequest> kafkaStatus = new KafkaStatus<>(kafkaAllowRequest,"delete");
+        KafkaStatus<KafkaAllowRequest> kafkaStatus = new KafkaStatus<>(kafkaAllowRequest,"deviceToken");
         kafkaDeviceTemplate.send(topic, kafkaStatus);
     }
 }

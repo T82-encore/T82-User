@@ -217,8 +217,8 @@ public class UserServiceImpl implements  UserService{
     }
 
     @Override
-    public void sendDeviceToken(DeviceTokenRequest req) {
-        KafkaAllowRequest kafkaAllowRequest = new KafkaAllowRequest(req.userId(),req.deviceToken());
+    public void sendDeviceToken(DeviceTokenRequest req,TokenInfo tokenInfo) {
+        KafkaAllowRequest kafkaAllowRequest = new KafkaAllowRequest(tokenInfo.id(),req.deviceToken());
         kafkaProducer.sendDeviceToken(kafkaAllowRequest, "deviceTopic");
     }
 }

@@ -15,5 +15,5 @@ public interface UserService {
     TokenResponse kakaoLogin(String accessToken);
     TokenResponse googleLogin(String token);
 
-    void sendDeviceToken(DeviceTokenRequest req);
+    void sendDeviceToken(DeviceTokenRequest req, TokenInfo tokenInfo);
 }
