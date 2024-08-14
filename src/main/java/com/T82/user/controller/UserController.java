@@ -74,10 +74,8 @@ public class UserController {
     }
 
 
-
-
-
-
-
-
+    @PostMapping("/notification")
+    public void sendDeviceToken(@RequestBody DeviceTokenRequest req, @AuthenticationPrincipal TokenInfo tokenInfo) {
+        userService.sendDeviceToken(req,tokenInfo);
+    }
 }
