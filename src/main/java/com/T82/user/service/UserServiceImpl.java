@@ -8,6 +8,7 @@ import com.T82.user.domain.repository.UserRepository;
 import com.T82.user.exception.*;
 import com.T82.user.global.utils.JwtUtil;
 import com.T82.user.global.utils.TokenInfo;
+import com.T82.user.kafka.dto.request.KafkaAllowRequest;
 import com.T82.user.kafka.dto.request.KafkaUserRequest;
 import com.T82.user.kafka.producer.KafkaProducer;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -213,5 +214,11 @@ public class UserServiceImpl implements  UserService{
             log.info("예상치 못한 오류 발생: " + e.getMessage());
             throw e;
         }
+    }
+
+    @Override
+    public void sendDeviceToken(DeviceTokenRequest req) {
+        KafkaAllowRequest kafkaAllowRequest = new KafkaAllowRequest(req.userId(),req.deviceToken());
+        kafkaProducer.sendDeviceToken(kafkaAllowRequest, "deviceTopic");
     }
 }
