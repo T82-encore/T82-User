@@ -12,7 +12,6 @@ public interface UserService {
     UserInfoResponse getUserInfo(TokenInfo tokenInfo);
     void updateUser(TokenInfo tokenInfo, UserUpdateRequest userUpdateRequest);
     void deleteUser(TokenInfo tokenInfo);
-    TokenResponse kakaoLogin(String accessToken);
-    TokenResponse googleLogin(String token);
+    TokenResponse loginOauth(String accessToken, String provider);
     void sendDeviceToken(DeviceTokenRequest req, TokenInfo tokenInfo);
 }
