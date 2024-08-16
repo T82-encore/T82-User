@@ -97,7 +97,7 @@ public class UserServiceImpl implements  UserService{
     }
 
     @Override
-    //    @CustomException(ErrorCode.FAILED_USER_UPDATE)  "유저 업데이트 작업에 실패헀습니다."
+    //    @CustomException(ErrorCode.FAILED_UPDATE_USER)  "유저 업데이트 작업에 실패헀습니다."
     public void updateUser(TokenInfo tokenInfo, UserUpdateRequest userUpdateRequest) {
         User user = userRepository.findByEmail(tokenInfo.email());
         if(user == null) {
@@ -114,7 +114,7 @@ public class UserServiceImpl implements  UserService{
     }
 
     @Override
-    //    @CustomException(ErrorCode.FAILED_USER_DELETE)  "유저 삭제 작업에 실패헀습니다."
+    //    @CustomException(ErrorCode.FAILED_DELETE_USER)  "유저 삭제 작업에 실패헀습니다."
     public void deleteUser(TokenInfo tokenInfo) {
         User user = userRepository.findByEmail(tokenInfo.email());
         if(user == null) {
@@ -127,7 +127,7 @@ public class UserServiceImpl implements  UserService{
     }
 
     @Override
-    //    @CustomException(ErrorCode.FAILED_DEVICE_SEND)  "디바이스 토큰 전송 작업에 실패헀습니다."
+    //    @CustomException(ErrorCode.FAILED_SEND_DEVICE)  "디바이스 토큰 전송 작업에 실패헀습니다."
     public void sendDeviceToken(DeviceTokenRequest req,TokenInfo tokenInfo) {
         KafkaAllowRequest kafkaAllowRequest = new KafkaAllowRequest(tokenInfo.id(),req.deviceToken());
         kafkaProducer.sendDeviceToken(kafkaAllowRequest, "deviceTopic");
