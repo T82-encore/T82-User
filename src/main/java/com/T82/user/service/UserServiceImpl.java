@@ -1,5 +1,7 @@
 package com.T82.user.service;
 
+import com.T82.common_exception.annotation.CustomException;
+import com.T82.common_exception.exception.ErrorCode;
 import com.T82.common_exception.exception.user.DuplicatePhoneNumberException;
 import com.T82.common_exception.exception.user.EmailNotFoundException;
 import com.T82.common_exception.exception.user.PasswordMismatchException;
@@ -43,7 +45,7 @@ public class UserServiceImpl implements  UserService{
     private final RestTemplate restTemplate;
 
     @Override
-//    @CustomException(ErrorCode.FAILED_SIGNUP)  "회원가입을 실패했습니다."
+    @CustomException(ErrorCode.FAILED_SIGNUP)
     public void signUpUser(UserSignUpRequest userSignUpRequest) {
         User byEmail = userRepository.findByEmail(userSignUpRequest.email());
         if(byEmail != null) {
@@ -62,7 +64,7 @@ public class UserServiceImpl implements  UserService{
     }
 
     @Override
-    //    @CustomException(ErrorCode.FAILED_LOGIN)  "로그인을 실패했습니다."
+    @CustomException(ErrorCode.FAILED_LOGIN)
     public TokenResponse loginUser(UserLoginRequest userLoginRequest) {
         User user = userRepository.findByEmail(userLoginRequest.email());
         if(user == null) {
@@ -79,7 +81,7 @@ public class UserServiceImpl implements  UserService{
     }
 
     @Override
-    //    @CustomException(ErrorCode.FAILED_TOKEN)  "토큰 발급에 실패했습니다."
+    @CustomException(ErrorCode.FAILED_TOKEN)
     public TokenResponse refreshToken(TokenInfo tokenInfo) {
         User user = userRepository.findById(tokenInfo.id()).orElseThrow();
         String token = jwtUtil.generateToken(user);
@@ -87,7 +89,7 @@ public class UserServiceImpl implements  UserService{
     }
 
     @Override
-    //    @CustomException(ErrorCode.FAILED_USER_INFO)  "유저 정보 불러오기를 실패헀습니다."
+    @CustomException(ErrorCode.FAILED_USER_INFO)
     public UserInfoResponse getUserInfo(TokenInfo token) {
         User byEmail = userRepository.findByEmail(token.email());
         if(byEmail == null) {
@@ -97,7 +99,7 @@ public class UserServiceImpl implements  UserService{
     }
 
     @Override
-    //    @CustomException(ErrorCode.FAILED_UPDATE_USER)  "유저 업데이트 작업에 실패헀습니다."
+    @CustomException(ErrorCode.FAILED_UPDATE_USER)
     public void updateUser(TokenInfo tokenInfo, UserUpdateRequest userUpdateRequest) {
         User user = userRepository.findByEmail(tokenInfo.email());
         if(user == null) {
@@ -114,7 +116,7 @@ public class UserServiceImpl implements  UserService{
     }
 
     @Override
-    //    @CustomException(ErrorCode.FAILED_DELETE_USER)  "유저 삭제 작업에 실패헀습니다."
+    @CustomException(ErrorCode.FAILED_DELETE_USER)
     public void deleteUser(TokenInfo tokenInfo) {
         User user = userRepository.findByEmail(tokenInfo.email());
         if(user == null) {
@@ -127,14 +129,14 @@ public class UserServiceImpl implements  UserService{
     }
 
     @Override
-    //    @CustomException(ErrorCode.FAILED_SEND_DEVICE)  "디바이스 토큰 전송 작업에 실패헀습니다."
+    @CustomException(ErrorCode.FAILED_SEND_DEVICE)
     public void sendDeviceToken(DeviceTokenRequest req,TokenInfo tokenInfo) {
         KafkaAllowRequest kafkaAllowRequest = new KafkaAllowRequest(tokenInfo.id(),req.deviceToken());
         kafkaProducer.sendDeviceToken(kafkaAllowRequest, "deviceTopic");
     }
 
 
-    //    @CustomException(ErrorCode.FAILED_LOGIN)  "로그인을 실패했습니다."
+    @CustomException(ErrorCode.FAILED_LOGIN)
     public TokenResponse loginOauth(String accessToken, String provider) {
         String url = getProviderUrl(provider);
         log.info("Request URL: " + url);
